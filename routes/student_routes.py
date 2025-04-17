@@ -1,5 +1,3 @@
-
-
 from flask import Blueprint, render_template, request, redirect, flash
 from models import Student, Class, Enrollment, Course, db
 
@@ -16,21 +14,22 @@ def student_add():
         student = Student(
             name=request.form['name'],
             nickname=request.form.get('nickname'),
-            school=request.form.get('school'),
-            grade=request.form.get('grade'),
-            birthday=request.form.get('birthday'),
-            allergy=request.form.get('allergy'),
-            health=request.form.get('health'),
             phone=request.form.get('phone'),
-            emergency_name1=request.form.get('emergency_name1'),
-            emergency_phone1=request.form.get('emergency_phone1'),
-            emergency_name2=request.form.get('emergency_name2'),
-            emergency_phone2=request.form.get('emergency_phone2')
+            email=request.form.get('email'),
+            birthday=request.form.get('birthday'),
+            gender=request.form.get('gender'),
+            school_name=request.form.get('school_name'),
+            school_type = request.form.get('school_type'),
+            school_level=request.form.get('school_level'),
+            health_condition=request.form.get('health_condition'),
+            health_detail=request.form.get('health_detail'),
+            allow_photo=request.form.get('allow_photo') == 'on',
+            allow_paracetamol=request.form.get('allow_paracetamol') == 'on'
         )
         db.session.add(student)
         db.session.commit()
         return redirect('/student')
-    return render_template('student/add.html')
+    return render_template('student/add.html', student=None)
 
 @student_bp.route('/student/<int:student_id>')
 def student_view(student_id):
@@ -43,19 +42,20 @@ def student_edit(student_id):
     if request.method == 'POST':
         student.name = request.form['name']
         student.nickname = request.form.get('nickname')
-        student.school = request.form.get('school')
-        student.grade = request.form.get('grade')
-        student.birthday = request.form.get('birthday')
-        student.allergy = request.form.get('allergy')
-        student.health = request.form.get('health')
         student.phone = request.form.get('phone')
-        student.emergency_name1 = request.form.get('emergency_name1')
-        student.emergency_phone1 = request.form.get('emergency_phone1')
-        student.emergency_name2 = request.form.get('emergency_name2')
-        student.emergency_phone2 = request.form.get('emergency_phone2')
+        student.email = request.form.get('email')
+        student.birthday = request.form.get('birthday')
+        student.gender = request.form.get('gender')
+        student.school_name = request.form.get('school_name')
+        student.school_type = request.form.get('school_type')
+        student.school_level = request.form.get('school_level')
+        student.health_condition = request.form.get('health_condition')
+        student.health_detail = request.form.get('health_detail')
+        student.allow_photo = request.form.get('allow_photo') == 'on'
+        student.allow_paracetamol = request.form.get('allow_paracetamol') == 'on'
 
         db.session.commit()
-        flash("✅ แก้ไขข้อมูลนักเรียนเรียบร้อยแล้ว!")
+        flash("✅ แก้ไขข้อมูลนักเรียนเรียบร้อยแล้ว!", "success")
         return redirect('/student')
     return render_template('student/edit.html', student=student)
 

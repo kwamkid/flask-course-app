@@ -17,7 +17,19 @@
           </tr>
           <tr>
             <th>วันเกิด</th>
-            <td>{{ student.birthday or '-' }}</td>
+            <td>
+              {{ student.birthday or '-' }}
+              {% if student.birthday %}
+                {% set birthdate = student.birthday | todatetime('%Y-%m-%d') %}
+                {% set now = namespace(today=now()) %}
+                {% set age_years = now.today.year - birthdate.year - ((now.today.month, now.today.day) < (birthdate.month, birthdate.day)) %}
+                {% set age_months = (now.today.month - birthdate.month) %}
+                {% if age_months < 0 %}
+                  {% set age_months = age_months + 12 %}
+                {% endif %}
+                (อายุ {{ age_years }} ปี {{ age_months }} เดือน)
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <th>เบอร์โทรของน้อง</th>
@@ -25,27 +37,23 @@
           </tr>
           <tr>
             <th>โรงเรียน</th>
-            <td>{{ student.school }}</td>
+            <td>{{ student.school_name }}</td>
           </tr>
           <tr>
             <th>ระดับชั้น</th>
-            <td>{{ student.grade }}</td>
+            <td>{{ student.school_level }}</td>
           </tr>
           <tr>
-            <th>อาหารที่แพ้</th>
-            <td>{{ student.allergy or '-' }}</td>
+            <th>มีโรคประจำตัวหรือภาวะสุขภาพ</th>
+            <td>{{ student.health_condition or '-' }}</td>
           </tr>
           <tr>
-            <th>โรคประจำตัว</th>
-            <td>{{ student.health or '-' }}</td>
+            <th>อนุญาตให้ถ่ายรูป หรือ VDO ได้</th>
+            <td>{{ 'อนุญาต' if student.allow_photo in ['on', 'true', '1', 1, True] else 'ไม่อนุญาต' }}</td>
           </tr>
           <tr>
-            <th>ผู้ติดต่อฉุกเฉิน 1</th>
-            <td>{{ student.emergency_name1 }} - {{ student.emergency_phone1 }}</td>
-          </tr>
-          <tr>
-            <th>ผู้ติดต่อฉุกเฉิน 2</th>
-            <td>{{ student.emergency_name2 }} - {{ student.emergency_phone2 }}</td>
+            <th>กรณีน้องไม่สบาย สามารถให้ยาพาราเซตามอลได้หรือไม่?</th>
+            <td>{{ 'อนุญาต' if student.allow_paracetamol in ['on', 'true', '1', 1, True] else 'ไม่อนุญาต' }}</td>
           </tr>
         </tbody>
       </table>

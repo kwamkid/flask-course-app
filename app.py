@@ -62,6 +62,18 @@ def get_weekday_index(day_name):
     days = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์']
     return days.index(day_name)
 
+
+def todatetime(value, format='%Y-%m-%d'):
+    return datetime.strptime(value, format)
+
+def now():
+    return datetime.utcnow()
+
+app.jinja_env.filters['todatetime'] = todatetime
+app.jinja_env.globals['now'] = now
+
+app.jinja_env.filters['todatetime'] = todatetime
+
 @app.template_filter('format_date')
 def format_date(value):
     if isinstance(value, datetime):

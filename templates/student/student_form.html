@@ -1,58 +1,188 @@
 <!DOCTYPE html>
 <div class="form">
     <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label">ชื่อน้อง *</label>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">ชื่อ-นามสกุลน้อง *</label>
         <input name="name" class="form-control" required value="{{ student.name if student else '' }}">
       </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">ชื่อเล่น *</label>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">ชื่อเล่นน้อง *</label>
         <input name="nickname" class="form-control" required value="{{ student.nickname if student else '' }}">
       </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-label">วันเกิด</label>
-        <input type="date" name="birthday" class="form-control" value="{{ student.birthday if student and student.birthday else '' }}">
+      <div class="col-md-4 mb-3">
+        <label class="form-label">เพศ</label>
+        <select name="gender" class="form-control">
+          <option value="ชาย" {% if student.gender == 'ชาย' %}selected{% endif %}>ชาย</option>
+          <option value="หญิง" {% if student.gender == 'หญิง' %}selected{% endif %}>หญิง</option>
+          <option value="อื่นๆ" {% if student.gender == 'อื่นๆ' %}selected{% endif %}>อื่นๆ</option>
+        </select>
       </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">เบอร์โทรของน้อง</label>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label class="form-label">เบอร์มือถือ</label>
         <input name="phone" class="form-control" value="{{ student.phone if student else '' }}">
       </div>
-
-      <div class="col-md-6 mb-3">
+      <div class="col-md-4 mb-3">
+        <label class="form-label">อีเมล</label>
+        <input type="email" name="email" class="form-control" value="{{ student.email if student else '' }}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label d-flex justify-content-between align-items-center">
+          วันเกิด
+          <span id="ageDisplay" class="form-text text-muted small mb-0 ms-2"></span>
+        </label>
+        <input type="date" name="birthday" class="form-control" value="{{ student.birthday if student and student.birthday else '' }}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
         <label class="form-label">โรงเรียน *</label>
-        <input name="school" class="form-control" required value="{{ student.school if student else '' }}">
+        <input name="school_name" class="form-control" required value="{{ student.school_name if student else '' }}">
       </div>
+      <div class="col-md-4 mb-3">
+  <label class="form-label">ประเภทโรงเรียน *</label>
+  <select name="school_type" class="form-control" id="schoolTypeSelect" required>
+    <option value="">-- กรุณาเลือก --</option>
+    <option value="ไทย" {% if student and student.school_type == 'ไทย' %}selected{% endif %}>โรงเรียนไทย</option>
+    <option value="inter" {% if student and student.school_type == 'inter' %}selected{% endif %}>โรงเรียนนานาชาติ</option>
+  </select>
+</div>
+
+      <div class="col-md-4 mb-3">
+  <label class="form-label">ระดับชั้น *</label>
+  <!-- สำหรับโรงเรียนไทย -->
+  <select name="school_level" id="thaiLevel" class="form-control" required>
+    <option value="">-- กรุณาเลือก --</option>
+    <option value="อ.1" {% if student and student.school_level == 'อ.1' %}selected{% endif %}>อ.1</option>
+    <option value="อ.2" {% if student and student.school_level == 'อ.2' %}selected{% endif %}>อ.2</option>
+    <option value="อ.3" {% if student and student.school_level == 'อ.3' %}selected{% endif %}>อ.3</option>
+    <option value="ป.1" {% if student and student.school_level == 'ป.1' %}selected{% endif %}>ป.1</option>
+    <option value="ป.2" {% if student and student.school_level == 'ป.2' %}selected{% endif %}>ป.2</option>
+    <option value="ป.3" {% if student and student.school_level == 'ป.3' %}selected{% endif %}>ป.3</option>
+    <option value="ป.4" {% if student and student.school_level == 'ป.4' %}selected{% endif %}>ป.4</option>
+    <option value="ป.5" {% if student and student.school_level == 'ป.5' %}selected{% endif %}>ป.5</option>
+    <option value="ป.6" {% if student and student.school_level == 'ป.6' %}selected{% endif %}>ป.6</option>
+    <option value="ม.1" {% if student and student.school_level == 'ม.1' %}selected{% endif %}>ม.1</option>
+    <option value="ม.2" {% if student and student.school_level == 'ม.2' %}selected{% endif %}>ม.2</option>
+    <option value="ม.3" {% if student and student.school_level == 'ม.3' %}selected{% endif %}>ม.3</option>
+    <option value="ม.4" {% if student and student.school_level == 'ม.4' %}selected{% endif %}>ม.4</option>
+    <option value="ม.5" {% if student and student.school_level == 'ม.5' %}selected{% endif %}>ม.5</option>
+    <option value="ม.6" {% if student and student.school_level == 'ม.6' %}selected{% endif %}>ม.6</option>
+  </select>
+
+  <!-- สำหรับโรงเรียนนานาชาติ -->
+  <select name="school_level" id="interLevel" class="form-control" style="display:none;">
+    <option value="">-- กรุณาเลือก --</option>
+    <option value="N" {% if student and student.school_level == 'N' %}selected{% endif %}>Nursery (N)</option>
+<option value="K1" {% if student and student.school_level == 'K1' %}selected{% endif %}>Kindergarten 1 (K1)</option>
+<option value="K2" {% if student and student.school_level == 'K2' %}selected{% endif %}>Kindergarten 2 (K2)</option>
+<option value="Reception" {% if student and student.school_level == 'Reception' %}selected{% endif %}>Reception</option>
+    {% for i in range(1, 14) %}
+      <option value="Y{{ i }}" {% if student and student.school_level == 'Y' ~ i %}selected{% endif %}>Y{{ i }}</option>
+    {% endfor %}
+  </select>
+</div>
+    </div>
+    <div class="row align-items-start mb-3">
+      <div class="col-md-6">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="has_health_condition" onclick="toggleHealthDetail()" {% if student and student.health_condition %}checked{% endif %}>
+          <label class="form-check-label" for="has_health_condition">
+            มีโรคประจำตัวหรือภาวะสุขภาพ
+          </label>
+        </div>
+        <input type="text" name="health_condition" id="health_detail_input" class="form-control mt-2" placeholder="ระบุรายละเอียดโรคหรือภาวะสุขภาพ" style="display:none;" value="{{ student.health_condition if student else '' }}">
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-6 mb-3">
-        <label class="form-label">ระดับชั้น *</label>
-        <input name="grade" class="form-control" required value="{{ student.grade if student else '' }}">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="allow_photo" id="allow_photo" checked>
+          <label class="form-check-label" for="allow_photo">
+            อนุญาตให้ถ่ายรูป หรือ VDO ได้
+          </label>
+        </div>
       </div>
 
+    </div>
+  <div class="row">
       <div class="col-md-6 mb-3">
-        <label class="form-label">อาหารที่แพ้</label>
-        <input name="allergy" class="form-control" value="{{ student.allergy if student else '' }}">
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">โรคประจำตัว</label>
-        <input name="health" class="form-control" value="{{ student.health if student else '' }}">
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-label">ชื่อผู้ติดต่อฉุกเฉิน 1</label>
-        <input name="emergency_name1" class="form-control" value="{{ student.emergency_name1 if student else '' }}">
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">เบอร์ผู้ติดต่อฉุกเฉิน 1</label>
-        <input name="emergency_phone1" class="form-control" value="{{ student.emergency_phone1 if student else '' }}">
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-label">ชื่อผู้ติดต่อฉุกเฉิน 2</label>
-        <input name="emergency_name2" class="form-control" value="{{ student.emergency_name2 if student else '' }}">
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">เบอร์ผู้ติดต่อฉุกเฉิน 2</label>
-        <input name="emergency_phone2" class="form-control" value="{{ student.emergency_phone2 if student else '' }}">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="allow_paracetamol" id="allow_paracetamol" checked>
+          <label class="form-check-label" for="allow_paracetamol">
+            กรณีน้องไม่สบาย สามารถให้ยาพาราเซตามอลได้หรือไม่?
+          </label>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    function toggleHealthDetail() {
+      var detailInput = document.getElementById('health_detail_input');
+      var checkbox = document.getElementById('has_health_condition');
+      if (checkbox.checked) {
+        detailInput.style.display = 'block';
+      } else {
+        detailInput.style.display = 'none';
+        detailInput.value = '';
+      }
+    }
+    function calculateAge(birthday) {
+      if (!birthday) return '';
+      const birthDate = new Date(birthday);
+      const today = new Date();
+      let years = today.getFullYear() - birthDate.getFullYear();
+      let months = today.getMonth() - birthDate.getMonth();
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      return `อายุ ${years} ปี ${months} เดือน`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      toggleHealthDetail();
+      const birthdayInput = document.querySelector('input[name="birthday"]');
+      const ageDisplay = document.getElementById('ageDisplay');
+      if (birthdayInput) {
+        birthdayInput.addEventListener('change', function () {
+          ageDisplay.textContent = calculateAge(this.value);
+        });
+        // Show age if already filled
+        if (birthdayInput.value) {
+          ageDisplay.textContent = calculateAge(birthdayInput.value);
+        }
+      }
+    });
+  </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const typeSelect = document.getElementById('schoolTypeSelect');
+  const thaiLevel = document.getElementById('thaiLevel');
+  const interLevel = document.getElementById('interLevel');
+
+  function toggleLevelDropdown() {
+    if (typeSelect.value === 'ไทย') {
+      thaiLevel.style.display = 'block';
+      thaiLevel.name = 'school_level';
+      interLevel.style.display = 'none';
+      interLevel.name = '';
+    } else if (typeSelect.value === 'inter') {
+      interLevel.style.display = 'block';
+      interLevel.name = 'school_level';
+      thaiLevel.style.display = 'none';
+      thaiLevel.name = '';
+    } else {
+      thaiLevel.style.display = 'none';
+      interLevel.style.display = 'none';
+      thaiLevel.name = '';
+      interLevel.name = '';
+    }
+  }
+
+  typeSelect.addEventListener('change', toggleLevelDropdown);
+  toggleLevelDropdown(); // on page load
+});
+</script>

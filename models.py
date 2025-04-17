@@ -45,18 +45,20 @@ class ClassSchedule(db.Model):
 class Student(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    nickname = db.Column(db.String(50))
-    school = db.Column(db.String(100))
-    grade = db.Column(db.String(50))
-    birthday = db.Column(db.String(10))  # รูปแบบ YYYY-MM-DD
-    allergy = db.Column(db.String(255))
-    health = db.Column(db.String(255))
-    phone = db.Column(db.String(20))
-    emergency_name1 = db.Column(db.String(100))
-    emergency_phone1 = db.Column(db.String(20))
-    emergency_name2 = db.Column(db.String(100))
-    emergency_phone2 = db.Column(db.String(20))
+    name = db.Column(db.String(100), nullable=False)  # ชื่อ-นามสกุล
+    nickname = db.Column(db.String(50))  # ชื่อเล่น
+    phone = db.Column(db.String(50))  # เบอร์มือถือของน้อง (อาจมีหลายเบอร์)
+    email = db.Column(db.String(100))  # อีเมลของน้อง
+    birthday = db.Column(db.String(10))  # วันเกิดน้อง (YYYY-MM-DD)
+    gender = db.Column(db.String(10))  # เพศ
+    school_name = db.Column(db.String(100))  # ชื่อโรงเรียน
+    school_level = db.Column(db.String(50))  # ระดับชั้นเรียน
+    health_condition = db.Column(db.String(255))  # โรคประจำตัว
+    health_detail = db.Column(db.String(255))  # รายละเอียดโรคประจำตัว
+    allow_photo = db.Column(db.String(50))  # อนุญาตให้ถ่ายรูป หรือ VDO ได้
+    allow_paracetamol = db.Column(db.String(50))  # อนุญาตให้ให้ยาพาราเซตามอลได้
+    school_type = db.Column(db.String(20))  # ตัวอย่างค่า: 'ไทย', 'inter'
+
 
 class Enrollment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

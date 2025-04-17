@@ -264,11 +264,13 @@ body {
     color: #a9a9a9;
 }
 
-body,
-html {
+html, body {
   height: 100%;
-  margin: 0;
-  overflow: hidden;
+  overflow-y: auto;
+}
+
+#content-wrapper {
+  min-height: 100vh;
 }
 
 .full-height-center {
