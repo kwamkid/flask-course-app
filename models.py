@@ -1,5 +1,15 @@
 # models.py
 from db import db  # ✅ นำ db จาก db.py มาใช้
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(100))  # ✅ ถ้าคุณใช้ name ใน register ต้องมีตรงนี้
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+
 
 class Holiday(db.Model):
     id = db.Column(db.Integer, primary_key=True)

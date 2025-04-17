@@ -264,3 +264,16 @@ body {
     color: #a9a9a9;
 }
 
+body,
+html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.full-height-center {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

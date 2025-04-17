@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <h1 class="h3 mb-4 text-primary">{{ 'เพิ่มผู้ใช้' if not user else 'แก้ไขผู้ใช้' }}</h1>
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">ข้อมูลผู้ใช้</h6>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label">ชื่อผู้ใช้</label>
+          <input type="text" name="username" class="form-control" value="{{ user.username if user else '' }}" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">ชื่อ</label>
+          <input type="text" name="name" class="form-control" value="{{ user.name if user else '' }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">อีเมล</label>
+          <input type="email" name="email" class="form-control" value="{{ user.email if user else '' }}" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">รหัสผ่าน</label>
+          <input type="password" name="password" class="form-control" placeholder="กรอกรหัสผ่านใหม่ถ้าต้องการเปลี่ยน">
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> บันทึก</button>
+        <a href="{{ url_for('user.user_list') }}" class="btn btn-secondary"><i class="fas fa-times"></i> ยกเลิก</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,14 +1,17 @@
 from flask import Flask, render_template, request, redirect , url_for
 from datetime import datetime, timedelta
 from db import db  # ✅ ใช้ db จากไฟล์ใหม่
-from models import Course, Class, ClassSchedule, Holiday
+from models import Course, Class, ClassSchedule, Holiday, User
 from flask import flash
+from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
 from routes.course_routes import course_bp
 from routes.class_routes import class_bp
 from routes.student_routes import student_bp
 from routes.enroll_routes import enroll_bp  # ✅ เพิ่ม
 from routes.class_routes import generate_class_dates
+from routes.auth_routes import auth_bp
+from routes.user_routes import user_bp
 
 import os
 
@@ -22,10 +25,25 @@ app.secret_key = 'uK&2t#fYxP7$eNp!qA1z'  # ✅ ตั้งค่าลับอ
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'school.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
+
 app.register_blueprint(course_bp)
 app.register_blueprint(class_bp)
 app.register_blueprint(student_bp)
 app.register_blueprint(enroll_bp)  # ✅ เพิ่ม
+app.register_blueprint(auth_bp)
+app.register_blueprint(user_bp)
+
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth.login'  # ชื่อ route login ของคุณ
+login_manager.login_message_category = 'info'
+@app.before_request
+def require_login():
+    # ถ้า user ยังไม่ login และไม่ใช่ route ยกเว้น
+    if not current_user.is_authenticated and not request.endpoint in ['auth.login', 'auth.register', 'static']:
+        return redirect(url_for('auth.login'))
 
 
 db.init_app(app)  # ✅ บอกให้ db ใช้ app นี้
@@ -35,6 +53,10 @@ migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
 # (ตามด้วย model และ routes ต่าง ๆ)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 def get_weekday_index(day_name):
     days = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์']

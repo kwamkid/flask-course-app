@@ -1,0 +1,26 @@
+{% extends "no_sidebar_base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100" style="overflow: hidden;">
+  <div class="card shadow p-4" style="min-width: 400px;">
+    <h3 class="text-center text-danger mb-4">เข้าสู่ระบบผู้ดูแล</h3>
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="username">ชื่อผู้ใช้</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">รหัสผ่าน</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+
+      <button type="submit" class="btn btn-danger w-100 mt-3">เข้าสู่ระบบ</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <small>ยังไม่มีบัญชี? <a href="{{ url_for('auth.register') }}">สมัครสมาชิก</a></small>
+    </div>
+  </div>
+</div>
+{% endblock %}
