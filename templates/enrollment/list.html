@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}ลงทะเบียนนักเรียน{% endblock %}
+{% block content %}
+
+{% if enrollments %}
+<div class="card shadow mt-4">
+    <div class="card-header">
+        <h6 class="m-0 font-weight-bold text-primary">รายชื่อนักเรียนที่ลงทะเบียน</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="enrollment-table" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ชื่อ</th>
+                    <th>อีเมล</th>
+                    <th>ชื่อคลาส</th>
+                    <th>คอร์ส</th>
+                    <th>เวลาเรียน</th>
+                    <th>วันเรียน</th>
+                    <th>ช่วงวันที่</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in enrollments %}
+                <tr>
+                    <td>{{ item.student.name }}</td>
+                    <td>{{ item.student.email or '' }}</td>
+                    <td>{{ item.class_.name if item.class_ else '' }}</td>
+                    <td>
+  {% if item.class_ and item.class_.course %}
+    {{ item.class_.course.title }}
+  {% else %}
+    <span class="text-muted">ไม่มีข้อมูล</span>
+  {% endif %}
+</td>
+                    <td>
+    {% if item.class_ %}
+      {{ item.class_.start_time }} - {{ item.class_.end_time }}
+    {% else %}
+      -
+    {% endif %}
+  </td>
+                    <td>
+                        {% set days = item.class_.days.split(',') if item.class_ and item.class_.days else [] %}
+                        {% set day_names = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'] %}
+                        {% set filtered_days = [] %}
+                        {% for day in days %}
+                        {% if day.isdigit() %}
+                        {% set _ = filtered_days.append(day_names[day|int]) %}
+                        {% endif %}
+                        {% endfor %}
+                        {{ filtered_days | join(', ') }}
+                    </td>
+                    <td>
+    {% if item.class_ %}
+      {{ item.class_.start_date }} - {{ item.class_.end_date or '' }}
+    {% else %}
+      -
+    {% endif %}
+  </td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.jQuery) {
+        $('#enrollment-table').DataTable({
+          language: {
+            search: "ค้นหา:",
+            lengthMenu: "แสดง _MENU_ รายการ",
+            info: "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
+            infoEmpty: "ไม่มีข้อมูล",
+            zeroRecords: "ไม่พบข้อมูลที่ต้องการ",
+            paginate: {
+              first: "หน้าแรก",
+              last: "หน้าสุดท้าย",
+              next: "ถัดไป",
+              previous: "ย้อนกลับ"
+            }
+          }
+        });
+      }
+    });
+</script>
+{% else %}
+<div class="card shadow mt-4">
+    <div class="card-body text-center">
+        <p class="text-muted">ยังไม่มีนักเรียนที่ลงทะเบียน</p>
+        <a href="{{ url_for('enroll.enroll_form') }}" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> ลงทะเบียนนักเรียนใหม่
+        </a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

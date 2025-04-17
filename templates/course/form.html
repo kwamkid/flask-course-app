@@ -1,0 +1,44 @@
+<div class="form">
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="title" class="form-label">ชื่อคอร์สเรียน</label>
+      <input type="text" class="form-control" id="title" name="title" required value="{{ course.title if course }}">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label d-block">เลือกสี</label>
+      <div class="d-flex flex-wrap align-items-center" id="color-options">
+          {% set colors = [
+            "#5B8FF9", "#5AD8A6", "#E66767", "#9F7BE1",
+            "#3A3A3A", "#59B6C3", "#DA9E5B", "#E6855E",
+            "#F99B9F", "#FFD800", "#7755CC", "#5C940D"
+          ] %}
+          {% for c in colors %}
+              <label class="m-1 color-option" style="cursor:pointer;">
+              <input type="radio" name="color" value="{{ c }}" required style="display: none;"
+                       {% if course and course.color == c %}checked{% elif not course and loop.first %}checked{% endif %}>
+                <span class="color-box" style="background-color:{{ c }};"></span>
+                <span class="check-icon">✓</span>
+              </label>
+          {% endfor %}
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+
+  const colorOptions = document.querySelectorAll('.color-option input');
+  colorOptions.forEach(input => {
+    if (input.checked) {
+      input.closest('.color-option').classList.add('selected');
+    }
+
+    input.addEventListener('change', () => {
+      document.querySelectorAll('.color-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      input.closest('.color-option').classList.add('selected');
+    });
+  });
+</script>

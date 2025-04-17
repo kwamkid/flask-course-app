@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1 class="text-primary h3">ข้อมูลคลาสเรียน</h1>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="card mb-4">
+        <div class="card-body">
+          <p><strong>ชื่อคลาส:</strong> {{ class_instance.name }}</p>
+          <p><strong>คอร์สเรียน:</strong> {{ class_instance.course.title }}</p>
+          <p><strong>วันเริ่มต้น:</strong> {{ class_instance.start_date.strftime('%d/%m/%Y') }}</p>
+          <p><strong>เวลาเรียน:</strong> {{ class_instance.start_time }} - {{ class_instance.end_time }}</p>
+          <p><strong>จำนวนครั้งที่เรียน:</strong> {{ class_instance.total_sessions }}</p>
+
+          <hr>
+          <h5>วันที่เรียนทั้งหมด:</h5>
+          <ul>
+            {% for schedule in class_instance.schedules %}
+              <li>{{ schedule.date.strftime('%A %d/%m/%Y') }}</li>
+            {% endfor %}
+          </ul>
+
+          <a href="{{ url_for('classroom.class_edit', class_id=class_instance.id) }}" class="btn btn-primary">{{ BUTTON_LABELS.update_btn }}</a>
+          <a href="{{ url_for('classroom.class_list') }}" class="btn btn-secondary">{{ BUTTON_LABELS.cancel_btn }}</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+  <div class="card shadow-sm">
+    <div class="card-header" style="background-color: var(--primary-color); color: white;">
+      <h5 class="mb-0">📅 ปฏิทินวันเรียน</h5>
+    </div>
+    <div class="card-body" style="background-color: var(--light-color);">
+      <div id="calendar" style="max-width: 100%; margin: 0 auto;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'th',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+      displayEventTime: false,
+      eventDisplay: 'block',
+      events: [
+        {% for schedule in class_instance.schedules %}
+          {
+            title: '{{ class_instance.name }}',
+            start: '{{ schedule.date }}T{{ class_instance.start_time }}',
+            end: '{{ schedule.date }}T{{ class_instance.end_time }}',
+            allDay: false,
+            backgroundColor: '{{ class_instance.course.color }}',
+            borderColor: '{{ class_instance.course.color }}',
+            extendedProps: {
+              description: '{{ class_instance.name }}<br>{{ class_instance.start_time }} - {{ class_instance.end_time }}'
+            }
+          },
+        {% endfor %}
+      ],
+      eventDidMount: function(info) {
+        var tooltip = new bootstrap.Tooltip(info.el, {
+          title: info.event.extendedProps.description,
+          placement: 'top',
+          trigger: 'hover',
+          container: 'body',
+          html: true
+        });
+      }
+    });
+    calendar.render();
+  });
+</script>
+</div>
+{% endblock %}

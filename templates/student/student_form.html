@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<div class="form">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">ชื่อน้อง *</label>
+        <input name="name" class="form-control" required value="{{ student.name if student else '' }}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">ชื่อเล่น *</label>
+        <input name="nickname" class="form-control" required value="{{ student.nickname if student else '' }}">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">วันเกิด</label>
+        <input type="date" name="birthday" class="form-control" value="{{ student.birthday if student and student.birthday else '' }}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">เบอร์โทรของน้อง</label>
+        <input name="phone" class="form-control" value="{{ student.phone if student else '' }}">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">โรงเรียน *</label>
+        <input name="school" class="form-control" required value="{{ student.school if student else '' }}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">ระดับชั้น *</label>
+        <input name="grade" class="form-control" required value="{{ student.grade if student else '' }}">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">อาหารที่แพ้</label>
+        <input name="allergy" class="form-control" value="{{ student.allergy if student else '' }}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">โรคประจำตัว</label>
+        <input name="health" class="form-control" value="{{ student.health if student else '' }}">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">ชื่อผู้ติดต่อฉุกเฉิน 1</label>
+        <input name="emergency_name1" class="form-control" value="{{ student.emergency_name1 if student else '' }}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">เบอร์ผู้ติดต่อฉุกเฉิน 1</label>
+        <input name="emergency_phone1" class="form-control" value="{{ student.emergency_phone1 if student else '' }}">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">ชื่อผู้ติดต่อฉุกเฉิน 2</label>
+        <input name="emergency_name2" class="form-control" value="{{ student.emergency_name2 if student else '' }}">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">เบอร์ผู้ติดต่อฉุกเฉิน 2</label>
+        <input name="emergency_phone2" class="form-control" value="{{ student.emergency_phone2 if student else '' }}">
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <h1 class="h3 mb-4 text-primary">แก้ไขข้อมูลคลาสเรียน</h1>
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <form action="{{ url_for('classroom.class_edit', class_id=class_instance.id) }}" method="POST">
+        {% include "class/form.html" with context %}
+        <div class="d-flex mt-3">
+          <button type="submit" class="btn btn-primary">{{ BUTTON_LABELS.update_btn }}</button>
+          <a href="{{ url_for('classroom.class_list') }}" class="btn btn-secondary">{{ BUTTON_LABELS.cancel_btn }}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

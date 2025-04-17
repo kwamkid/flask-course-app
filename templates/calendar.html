@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}ตารางเรียนแบบปฏิทิน{% endblock %}
+{% block content %}
+
+<div class="container-fluid mt-4" style="color: var(--font-color); padding: 20px;">
+  <div class="card shadow-sm">
+    <div class="card-header" style="background-color: var(--primary-color); color: white;">
+      <h5 class="mb-0">📅 ตารางเรียนแบบปฏิทิน</h5>
+    </div>
+    <div class="card-body" style="background-color: var(--light-color);">
+      <div id="calendar"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #calendar {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    try {
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'th',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        events: {{ events | tojson | safe }},
+        displayEventTime: false,
+        eventDisplay: 'block',
+        eventDidMount: function(info) {
+          if (info.event.extendedProps && info.event.extendedProps.description) {
+            new bootstrap.Tooltip(info.el, {
+              title: info.event.extendedProps.description,
+              placement: 'top',
+              trigger: 'hover',
+              container: 'body',
+              html: true
+            });
+          }
+        }
+      });
+
+      calendar.render();
+
+    } catch (e) {
+      console.error("❌ FullCalendar Error:", e);
+    }
+  });
+</script>
+
+{% endblock %}

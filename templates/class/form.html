@@ -1,0 +1,58 @@
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <label>ชื่อคลาส</label>
+    <input type="text" name="name" class="form-control" value="{{ class_instance.name if class_instance else '' }}" required>
+  </div>
+  <div class="form-group col-md-6">
+    <label>คอร์สเรียน</label>
+    <select name="course_id" class="form-control" required>
+  {% for course in courses %}
+    <option value="{{ course.id }}" {% if class_instance and class_instance.course_id == course.id %}selected{% endif %}>
+      {{ course.title }}
+    </option>
+  {% endfor %}
+</select>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group col-md-4">
+    <label>วันเรียน (เลือกได้หลายวัน)</label><br>
+        {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+        {% set selected_days = class_instance.days.split(',') if class_instance and class_instance.days else [] %}
+    {% for day in days %}
+      <label class="mr-2">
+              <input type="checkbox" name="days" value="{{ loop.index0 }}" {% if loop.index0|string in selected_days %}checked{% endif %}> {{ day }}
+      </label>
+    {% endfor %}
+  </div>
+  <div class="form-group col-md-4">
+    <label>เวลาเริ่ม</label>
+      <input type="time" name="start_time" class="form-control" value="{{ class_instance.start_time if class_instance else '' }}" required>
+  </div>
+  <div class="form-group col-md-4">
+    <label>เวลาสิ้นสุด</label>
+      <input type="time" name="end_time" class="form-control" value="{{ class_instance.end_time if class_instance else '' }}" required>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <label>วันที่เริ่มคลาส</label>
+      <input type="date" name="start_date" class="form-control" value="{{ class_instance.start_date if class_instance else '' }}" required>
+  </div>
+  <div class="form-group col-md-6">
+    <label>จำนวนครั้งที่เรียน</label>
+      <input type="number" name="total_sessions" class="form-control" value="{{ class_instance.total_sessions if class_instance else '' }}" required>
+  </div>
+</div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function (e) {
+  const checkboxes = document.querySelectorAll('input[name="days"]:checked');
+  if (checkboxes.length === 0) {
+    e.preventDefault(); // ป้องกันการส่งฟอร์ม
+    alert("กรุณาเลือกวันเรียนอย่างน้อย 1 วัน");
+  }
+});
+</script>

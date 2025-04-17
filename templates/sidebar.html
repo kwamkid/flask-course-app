@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion custom-sidebar" id="accordionSidebar">
+
+  <!-- Sidebar - Brand -->
+  <a class="sidebar-brand d-flex align-items-center justify-content-start px-3 py-1" href="/">
+    <div class="sidebar-brand-icon rotate-n-15">
+      <i class="fas fa-robot fa-fw"></i>
+    </div>
+    <div class="sidebar-brand-text mx-2">ระบบเรียนพิเศษ</div>
+  </a>
+<!--    <div class="sidebar-heading mt-3 mb-2 px-3">จัดการคลาสเรียน</div>-->
+
+  <li class="nav-item">
+    <a class="nav-link px-3 py-1" href="/calendar">
+      <i class="fas fa-calendar-alt fa-fw text-white"></i>
+      <span class="ps-2">ตารางเรียน</span>
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link collapsed px-3 py-1" href="#" data-toggle="collapse" data-target="#collapseEnroll" aria-expanded="true" aria-controls="collapseEnroll">
+      <i class="fas fa-clipboard-list fa-fw text-white"></i>
+      <span class="ps-2">ลงทะเบียนเรียน</span>
+    </a>
+    <div id="collapseEnroll" class="collapse" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/enrollments">ข้อมูลลงทะเบียนเรียน</a>
+        <a class="collapse-item" href="/enroll">ลงทะเบียนนักเรียนใหม่</a>
+      </div>
+    </div>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link collapsed px-3 py-1" href="#" data-toggle="collapse" data-target="#collapseStudent" aria-expanded="true" aria-controls="collapseStudent">
+      <i class="fas fa-user-graduate fa-fw text-white"></i>
+      <span class="ps-2">จัดการนักเรียน</span>
+    </a>
+    <div id="collapseStudent" class="collapse" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/student">รายชื่อนักเรียน</a>
+      </div>
+    </div>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link collapsed px-3 py-1" href="#" data-toggle="collapse" data-target="#collapseAcademic" aria-expanded="true" aria-controls="collapseAcademic">
+      <i class="fas fa-book fa-fw text-white"></i>
+      <span class="ps-2">ข้อมูลการเรียน</span>
+    </a>
+    <div id="collapseAcademic" class="collapse" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/course">คอร์สเรียน</a>
+        <a class="collapse-item" href="/class">คลาสเรียน</a>
+        <a class="collapse-item" href="/holiday">วันหยุด</a>
+      </div>
+    </div>
+  </li>
+
+  <hr class="sidebar-divider d-none d-md-block my-2">
+
+  <!-- Sidebar Toggler -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+
+</ul>
+</body>
+</html>

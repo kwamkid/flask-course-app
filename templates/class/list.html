@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="container-fluid mt-4">
+
+  <h1 class="h3 mb-4 text-primary">คลาสเรียนทั้งหมด</h1>
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+      <h6 class="m-0 font-weight-bold text-primary">ตารางคลาสเรียน</h6>
+      <a href="{{ url_for('classroom.class_add') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> เพิ่มคลาสเรียน
+      </a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead class="table-primary text-center">
+            <tr>
+              <th>ชื่อคลาส</th>
+              <th>วิชา</th>
+              <th>วันเรียน</th>
+              <th>เวลา</th>
+              <th>ครูผู้สอน</th>
+              <th style="width: auto; white-space: nowrap;">ช่วงวันที่</th>
+              <th>จำนวนครั้ง</th>
+              <th class="text-center"><i class="fas fa-cog"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in class_list %}
+              {% if item.class %}
+                <tr>
+                    <td>{{ item.class.name }}</td>
+                    <td>{{ item.class.course.title }}</td>
+                    {% set days = item.class.days.split(',') if item.class.days else [] %}
+                    <td>
+                      {% for d in days %}
+                        {% if d.strip() == '0' %}จันทร์{% elif d.strip() == '1' %}อังคาร
+                        {% elif d.strip() == '2' %}พุธ{% elif d.strip() == '3' %}พฤหัส
+                        {% elif d.strip() == '4' %}ศุกร์{% elif d.strip() == '5' %}เสาร์
+                        {% elif d.strip() == '6' %}อาทิตย์{% endif %}
+                        {% if not loop.last %}, {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td>{{ item.class.start_time }} - {{ item.class.end_time }}</td>
+                    <td>-</td>
+                    <td>
+                      {% if item.class.start_date and item.last_date %}
+                        {{ item.class.start_date | format_date }} - {{ item.last_date | format_date }}
+                      {% elif item.class.start_date %}
+                        {{ item.class.start_date | format_date }} -
+                      {% else %}
+                        -
+                      {% endif %}
+                    </td>
+                    <td>{{ item.total_sessions }}</td>
+                    <td class="text-end">
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="actionMenu{{ item.class.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-cog"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actionMenu{{ item.class.id }}">
+                          <a class="dropdown-item" href="{{ url_for('classroom.class_view', class_id=item.class.id) }}">
+                            <i class="fas fa-eye"></i> ดู
+                          </a>
+                          <a class="dropdown-item" href="{{ url_for('classroom.class_edit', class_id=item.class.id) }}">
+                            <i class="fas fa-edit"></i> แก้ไข
+                          </a>
+                          <form action="{{ url_for('classroom.class_delete', class_id=item.class.id) }}" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบคลาสนี้?');">
+                            <button type="submit" class="dropdown-item text-danger">
+                              <i class="fas fa-trash"></i> ลบ
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DataTables JS Init -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    $('#dataTable').DataTable();
+  });
+</script>
+{% endblock %}

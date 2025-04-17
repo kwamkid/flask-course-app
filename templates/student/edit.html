@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <h1 class="h3 mb-4 text-primary">แก้ไขข้อมูลนักเรียน</h1>
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <form action="{{ url_for('student.student_edit', student_id=student.id) }}" method="POST">
+        {% include "student/student_form.html" with context %}
+        <div class="d-flex ">
+          <button type="submit" class="btn btn-primary">{{ BUTTON_LABELS.update_btn }}</button>
+          <a href="{{ url_for('student.student_list') }}" class="btn btn-secondary">{{ BUTTON_LABELS.cancel_btn }}</a>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
