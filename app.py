@@ -22,7 +22,16 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True  # ← ต้องมี
 app.config['DEBUG'] = True
 
 app.secret_key = 'uK&2t#fYxP7$eNp!qA1z'  # ✅ ตั้งค่าลับอะไรก็ได้
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'school.db')
+# แทนบรรทัดนี้:
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
+# ใช้แบบนี้แทน:
+if os.getenv("RENDER") == "true":
+    # ใช้ DATABASE_URL จาก Render
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+else:
+    # ใช้ SQLite สำหรับ local
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///school.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
