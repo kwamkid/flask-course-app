@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>จัดตารางสอนอัตโนมัติ</h1>
+
+    <div class="alert alert-info">
+        <p>ระบบจะจัดครูสอนให้กับคลาสที่ยังไม่มีครูสอนโดยอัตโนมัติ โดยคำนึงถึง:</p>
+        <ul>
+            <li>ความเชี่ยวชาญของครูตรงกับความต้องการของคลาส</li>
+            <li>ตารางเวลาของครูไม่ซ้อนทับกับคลาสอื่น</li>
+            <li>ภาระงานสอนของครูแต่ละคนใกล้เคียงกัน</li>
+        </ul>
+    </div>
+
+    <form method="POST">
+        <button type="submit" class="btn btn-primary">เริ่มจัดตารางสอนอัตโนมัติ</button>
+        <a href="{{ url_for('schedule.view') }}" class="btn btn-secondary">ยกเลิก</a>
+    </form>
+</div>
+{% endblock %}

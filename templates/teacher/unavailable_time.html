@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>จัดการเวลาที่ครูไม่ว่าง</h1>
+    <h4>{{ teacher.name }}</h4>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">เพิ่มเวลาที่ไม่ว่าง</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="day_of_week">วัน</label>
+                            <select class="form-control" id="day_of_week" name="day_of_week" required>
+                                <option value="">-- เลือกวัน --</option>
+                                <option value="0">จันทร์</option>
+                                <option value="1">อังคาร</option>
+                                <option value="2">พุธ</option>
+                                <option value="3">พฤหัสบดี</option>
+                                <option value="4">ศุกร์</option>
+                                <option value="5">เสาร์</option>
+                                <option value="6">อาทิตย์</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="start_time">เวลาเริ่ม</label>
+                            <input type="time" class="form-control" id="start_time" name="start_time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_time">เวลาสิ้นสุด</label>
+                            <input type="time" class="form-control" id="end_time" name="end_time" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">เวลาที่ไม่ว่าง</h5>
+                </div>
+                <div class="card-body">
+                    {% if unavailable_times %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>วัน</th>
+                                <th>เวลาเริ่ม</th>
+                                <th>เวลาสิ้นสุด</th>
+                                <th>การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for time in unavailable_times %}
+                            <tr>
+                                <td>
+                                    {% if time.day_of_week == 0 %}จันทร์
+                                    {% elif time.day_of_week == 1 %}อังคาร
+                                    {% elif time.day_of_week == 2 %}พุธ
+                                    {% elif time.day_of_week == 3 %}พฤหัสบดี
+                                    {% elif time.day_of_week == 4 %}ศุกร์
+                                    {% elif time.day_of_week == 5 %}เสาร์
+                                    {% elif time.day_of_week == 6 %}อาทิตย์
+                                    {% endif %}
+                                </td>
+                                <td>{{ time.start_time }}</td>
+                                <td>{{ time.end_time }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('teacher.delete_unavailable_time', id=time.id) }}" class="d-inline"
+                                          onsubmit="return confirm('ยืนยันการลบเวลาที่ไม่ว่าง?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">ลบ</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="alert alert-info">
+                        ยังไม่มีเวลาที่ไม่ว่าง
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{{ url_for('teacher.index') }}" class="btn btn-secondary">กลับไปหน้ารายชื่อครู</a>
+    </div>
+</div>
+{% endblock %}

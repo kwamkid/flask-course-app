@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">จัดการข้อมูลครู</h1>
+
+    <div class="mb-3 text-right">
+        <a href="{{ url_for('teacher.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> เพิ่มครูใหม่
+        </a>
+    </div>
+
+    {% if teachers %}
+    <div class="row">
+        {% for teacher in teachers %}
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        {% if teacher.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + teacher.image_filename) }}"
+                                 class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='img/default_teacher.png') }}"
+                                 class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                    <h5 class="card-title text-primary">{{ teacher.name }}</h5>
+                    <p class="mb-1"><strong>อีเมล:</strong> {{ teacher.email }}</p>
+                    <p class="mb-1"><strong>เบอร์โทร:</strong> {{ teacher.phone or '-' }}</p>
+                    <p class="mb-0"><strong>ความเชี่ยวชาญ:</strong> {{ teacher.specialties or '-' }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="btn-group btn-group-sm d-flex" role="group">
+                        <a href="{{ url_for('teacher.view', id=teacher.id) }}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ url_for('teacher.edit', id=teacher.id) }}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button type="button" class="btn btn-outline-danger w-100"
+                                onclick="confirmDelete('{{ teacher.id }}', '{{ teacher.name }}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modal สำหรับยืนยันการลบ -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ยืนยันการลบข้อมูล</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    คุณต้องการลบข้อมูลของ <span id="teacherName" class="font-weight-bold text-danger"></span> ใช่หรือไม่?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" method="POST" action="">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-danger">ลบข้อมูล</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-info">
+        ยังไม่มีข้อมูลครู คลิกที่ปุ่ม "เพิ่มครูใหม่" เพื่อเริ่มต้น
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function confirmDelete(teacherId, teacherName) {
+    document.getElementById('teacherName').textContent = teacherName;
+    document.getElementById('deleteForm').action = "{{ url_for('teacher.delete', id=0) }}".replace('0', teacherId);
+    $('#deleteModal').modal('show');
+}
+</script>
+{% endblock %}

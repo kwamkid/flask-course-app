@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>จัดครูให้คลาสเรียนด้วยตัวเอง</h1>
+
+    {% if unassigned_classes %}
+    <form method="POST">
+        <div class="form-group">
+            <label for="class_id">เลือกคลาสเรียน</label>
+            <select class="form-control" id="class_id" name="class_id" required>
+                <option value="">-- เลือกคลาสเรียน --</option>
+                {% for class in unassigned_classes %}
+                <option value="{{ class.id }}">{{ class.name }} ({{ class.start_time }} - {{ class.end_time }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="teacher_id">เลือกครูผู้สอน</label>
+            <div class="row">
+                {% for teacher in teachers %}
+                <div class="col-md-4 mb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="teacher_id"
+                                       id="teacher_{{ teacher.id }}" value="{{ teacher.id }}" required>
+                                <label class="form-check-label" for="teacher_{{ teacher.id }}">
+                                    <div class="media">
+                                        {% if teacher.image_filename %}
+                                            <img src="{{ url_for('static', filename='uploads/' + teacher.image_filename) }}"
+                                                 class="mr-3 rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                        {% else %}
+                                            <img src="{{ url_for('static', filename='img/default_teacher.png') }}"
+                                                 class="mr-3 rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                        {% endif %}
+                                        <div class="media-body">
+                                            <h6 class="mt-0">{{ teacher.name }}</h6>
+                                            <small>{{ teacher.specialties }}</small>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">บันทึกการจัดครู</button>
+        <a href="{{ url_for('schedule.view') }}" class="btn btn-secondary">ยกเลิก</a>
+    </form>
+    {% else %}
+    <div class="alert alert-info">
+        ไม่มีคลาสเรียนที่ยังไม่ได้จัดครู
+    </div>
+    <a href="{{ url_for('schedule.view') }}" class="btn btn-primary">กลับไปหน้าตารางสอน</a>
+    {% endif %}
+</div>
+{% endblock %}

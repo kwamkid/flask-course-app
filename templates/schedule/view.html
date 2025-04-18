@@ -1,0 +1,53 @@
+<!-- templates/schedule/view.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>ตารางสอนครู</h1>
+
+    <div class="mb-3">
+        <a href="{{ url_for('schedule.auto_assign') }}" class="btn btn-primary">จัดตารางสอนอัตโนมัติ</a>
+        <a href="{{ url_for('schedule.manual_assign') }}" class="btn btn-success">จัดครูด้วยตัวเอง</a>
+    </div>
+
+    {% if assignments %}
+    <div class="row">
+        {% for assignment, teacher, class, course in assignments %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ course.title }} - {{ class.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="media">
+                        {% if teacher.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + teacher.image_filename) }}"
+                                 class="mr-3 rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='img/default_teacher.png') }}"
+                                 class="mr-3 rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
+                        {% endif %}
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ teacher.name }}</h5>
+                            <p>{{ teacher.specialties }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="card-text">
+                        <strong>วันเรียน:</strong> {{ class.days|join(', ') }}<br>
+                        <strong>เวลา:</strong> {{ class.start_time }} - {{ class.end_time }}
+                    </p>
+                    <a href="{{ url_for('schedule.change_teacher', assignment_id=assignment.id) }}"
+                       class="btn btn-sm btn-info">เปลี่ยนครู</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        ยังไม่มีการจัดครูให้กับคลาสเรียน
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

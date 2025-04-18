@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>เพิ่มข้อมูลครูใหม่</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% include 'teacher/form.html' %}
+        
+        <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+        <a href="{{ url_for('teacher.index') }}" class="btn btn-secondary">ยกเลิก</a>
+    </form>
+</div>
+{% endblock %}

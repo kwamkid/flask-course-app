@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+  <h1 class="h3 mb-4 text-primary">แก้ไขข้อมูลครู</h1>
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+        {% include 'teacher/form.html' with context %}
+
+        <div class="d-flex justify-content-start mt-4">
+          <button type="submit" class="btn btn-primary me-2">บันทึกข้อมูล</button>
+          <a href="{{ url_for('teacher.index') }}" class="btn btn-secondary">ยกเลิก</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

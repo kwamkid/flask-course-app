@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect , url_for
 from datetime import datetime, timedelta
 from db import db  # ✅ ใช้ db จากไฟล์ใหม่
-from models import Course, Class, ClassSchedule, Holiday, User
+from models import Course, Class, ClassSchedule, Holiday, User, Teacher, TeacherAssignment
 from flask import flash
 from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
@@ -12,8 +12,15 @@ from routes.enroll_routes import enroll_bp  # ✅ เพิ่ม
 from routes.class_routes import generate_class_dates
 from routes.auth_routes import auth_bp
 from routes.user_routes import user_bp
+from routes.teacher_routes import teacher_bp
+from routes.schedule_routes import schedule_bp
+from routes.demo_routes import demo_bp
+
+
 
 import os
+from werkzeug.utils import secure_filename
+
 
 # หลังจาก init_app แล้ว
 
@@ -34,15 +41,15 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///school.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
-
 app.register_blueprint(course_bp)
 app.register_blueprint(class_bp)
 app.register_blueprint(student_bp)
 app.register_blueprint(enroll_bp)  # ✅ เพิ่ม
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
-
+app.register_blueprint(teacher_bp)
+app.register_blueprint(schedule_bp)
+app.register_blueprint(demo_bp)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -57,6 +64,27 @@ def require_login():
 
 db.init_app(app)  # ✅ บอกให้ db ใช้ app นี้
 migrate = Migrate(app, db)
+
+# กำหนดที่เก็บรูปภาพ
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/uploads')
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # จำกัดขนาดไฟล์ไม่เกิน 16 MB
+app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# สร้างโฟลเดอร์สำหรับรูป default (ถ้าไม่มี)
+DEFAULT_IMAGES_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img')
+if not os.path.exists(DEFAULT_IMAGES_FOLDER):
+    os.makedirs(DEFAULT_IMAGES_FOLDER)
+
 
 # สร้างตาราง (รันครั้งแรกเท่านั้น)
 with app.app_context():
@@ -155,24 +183,51 @@ def subject_class():
     courses = Course.query.all()
     return render_template('subject_class.html', courses=courses)
 
+
 @app.route('/calendar')
 def calendar():
     events = []
     classes = Class.query.all()
     for cls in classes:
-        course = db.session.get(Course, cls.course_id)  # ✅ แก้ตรงนี้
+        course = db.session.get(Course, cls.course_id)
         color = course.color if course else '#3788d8'
+
+        # หาข้อมูลครูที่สอนคลาสนี้
+        teacher_assignment = TeacherAssignment.query.filter_by(class_id=cls.id).first()
+        teacher_name = ""
+        teacher_image = ""
+        if teacher_assignment:
+            teacher = Teacher.query.get(teacher_assignment.teacher_id)
+            if teacher:
+                teacher_name = f"ครู: {teacher.name}"
+                if teacher.image_filename:
+                    teacher_image = url_for('static', filename=f'uploads/{teacher.image_filename}')
+                else:
+                    teacher_image = url_for('static', filename='images/default_teacher.png')
+
         for sched in cls.schedules:
-            events.append({
-                'title': cls.name,
+            title = cls.name
+            description = f"{cls.name}<br>{cls.start_time} - {cls.end_time}"
+            if teacher_name:
+                title = f"{cls.name} ({teacher.name})"
+                description = f"{description}<br>{teacher_name}"
+
+            event = {
+                'title': title,
                 'start': f"{sched.date}T{cls.start_time}",
                 'end': f"{sched.date}T{cls.end_time}",
                 'color': color,
                 'extendedProps': {
-                    'description': f"{cls.name}<br>{cls.start_time} - {cls.end_time}"
+                    'description': description,
                 }
-            })
+            }
 
+            if teacher_image:
+                event['extendedProps']['teacher_image'] = teacher_image
+
+            events.append(event)
+
+    # เพิ่มวันหยุดเหมือนเดิม
     holidays = Holiday.query.order_by(Holiday.date).all()
     for h in holidays:
         event = {

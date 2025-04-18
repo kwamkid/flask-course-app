@@ -34,6 +34,7 @@ class Class(db.Model):
     start_date = db.Column(db.String(10), nullable=False)
     schedule = db.Column(db.Text)  # เก็บเป็น JSON string
     schedules = db.relationship("ClassSchedule", back_populates="class_instance", cascade="all, delete-orphan")
+    required_specialty = db.Column(db.String(100))  # เช่น "VEX IQ" หรือ "Little Innovator"
 
 class ClassSchedule(db.Model):
 
@@ -69,3 +70,36 @@ class Enrollment(db.Model):
     student = db.relationship('Student', backref='enrollments')
     class_ = db.relationship('Class',
                              backref=db.backref('enrollments', cascade="all, delete", passive_deletes=True))
+
+
+class Teacher(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(20))
+    specialties = db.Column(db.String(255))  # เช่น "VEX IQ, Little Innovator" คั่นด้วย ","
+    max_hours_per_week = db.Column(db.Integer, default=40)
+    image_filename = db.Column(db.String(255))  # เก็บชื่อไฟล์รูปภาพ
+    unavailable_times = db.relationship('TeacherUnavailableTime', backref='teacher', cascade='all, delete-orphan')
+    assignments = db.relationship('TeacherAssignment', backref='teacher', cascade='all, delete-orphan')
+
+    def has_specialty(self, specialty):
+        if not self.specialties:
+            return False
+        teacher_specialties = [s.strip() for s in self.specialties.split(',')]
+        return specialty.strip() in teacher_specialties
+
+
+class TeacherUnavailableTime(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=False)
+    day_of_week = db.Column(db.Integer, nullable=False)  # 0=จันทร์, 1=อังคาร, ..., 6=อาทิตย์
+    start_time = db.Column(db.String(5), nullable=False)  # รูปแบบ "HH:MM"
+    end_time = db.Column(db.String(5), nullable=False)  # รูปแบบ "HH:MM"
+
+
+class TeacherAssignment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+    class_ = db.relationship('Class', backref=db.backref('teacher_assignments', cascade='all, delete-orphan'))

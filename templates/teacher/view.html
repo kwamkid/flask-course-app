@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <h1 class="h3 mb-4 text-primary">ข้อมูลคุณครู</h1>
+      <div class="row mb-3">
+        <div class="col-sm-2 font-weight-bold">รูปโปรไฟล์</div>
+        <div class="col-sm-10">
+          {% if teacher.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' + teacher.image_filename) }}"
+                 class="img-fluid rounded" style="max-height: 300px;">
+          {% else %}
+            <img src="{{ url_for('static', filename='img/default_teacher.png') }}"
+                 class="img-fluid rounded" style="max-height: 300px;">
+          {% endif %}
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-2 font-weight-bold">ชื่อ</div>
+        <div class="col-sm-10">{{ teacher.name }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-2 font-weight-bold">อีเมล</div>
+        <div class="col-sm-10">{{ teacher.email }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-2 font-weight-bold">เบอร์โทร</div>
+        <div class="col-sm-10">{{ teacher.phone or '-' }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-2 font-weight-bold">ความเชี่ยวชาญ</div>
+        <div class="col-sm-10">{{ teacher.specialties or '-' }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-2 font-weight-bold">ชั่วโมงสอนสูงสุด</div>
+        <div class="col-sm-10">{{ teacher.max_hours_per_week }} ชม./สัปดาห์</div>
+      </div>
+      <hr>
+      <h5 class="mb-3">ตารางสอน</h5>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>คลาส</th>
+              <th>วันเรียน</th>
+              <th>เวลา</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for class in teacher_classes %}
+            <tr>
+              <td>{{ class.class_name }}</td>
+              <td>{{ class.days }}</td>
+              <td>{{ class.start_time }} - {{ class.end_time }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="3" class="text-center">ไม่มีคลาสเรียนที่รับผิดชอบ</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <a href="{{ url_for('teacher.edit', id=teacher.id) }}" class="btn btn-primary">แก้ไขข้อมูล</a>
+      <a href="{{ url_for('teacher.index') }}" class="btn btn-secondary">ย้อนกลับ</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
