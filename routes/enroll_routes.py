@@ -3,13 +3,20 @@ from models import Student, Class, Enrollment , Course
 from db import db
 from datetime import datetime, timedelta
 
+from routes.course_routes import course_list
 
 enroll_bp = Blueprint('enroll', __name__)
 
 @enroll_bp.route('/enrollments')
 def enrollment_list():
-    enrollments = Enrollment.query.all()
-    return render_template('enrollment/list.html', enrollments=enrollments)
+    class_list = Class.query.all()
+    course_list = Course.query.all()
+
+    return render_template(
+        'enrollment/list.html',
+        class_list=class_list,
+        course_list=course_list,
+    )
 
 @enroll_bp.route('/enroll', methods=['GET', 'POST'])
 def enroll_form():
@@ -72,3 +79,42 @@ def enroll_form():
 
     enrollments = Enrollment.query.all()
     return render_template('enrollment/add.html', students=students, all_classes=all_classes)
+
+@enroll_bp.route('/get_available_classes/<int:student_id>')
+def get_available_classes(student_id):
+    enrolled_class_ids = db.session.query(Enrollment.class_id).filter_by(student_id=student_id).all()
+    enrolled_class_ids = [id for (id,) in enrolled_class_ids]
+    available_classes = Class.query.filter(~Class.id.in_(enrolled_class_ids)).all()
+
+    return jsonify([
+        {'id': c.id, 'name': c.name} for c in available_classes
+    ])
+
+@enroll_bp.route('/api/student_enrollments/<int:student_id>')
+def get_student_enrollments(student_id):
+    from models import ClassSchedule
+
+    enrollments = (
+        db.session.query(Enrollment, Class, Course)
+        .join(Class, Enrollment.class_id == Class.id)
+        .join(Course, Class.course_id == Course.id)
+        .filter(Enrollment.student_id == student_id)
+        .all()
+    )
+
+    result = []
+    for enrollment, cls, course in enrollments:
+        # ดึงวันเรียนแบบตัวเลข แล้วแปลงเป็นชื่อวัน
+        day_indexes = list(map(int, cls.days.split(',')))
+        day_map = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์']
+        day_names = [day_map[i] for i in day_indexes]
+
+        result.append({
+            'class_name': cls.name,
+            'course_title': course.title,
+            'days': day_names,
+            'start_time': cls.start_time,
+            'end_time': cls.end_time
+        })
+
+    return jsonify(result)

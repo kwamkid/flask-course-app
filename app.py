@@ -208,6 +208,10 @@ def calendar():
                 else:
                     teacher_image = url_for('static', filename='images/default_teacher.png')
 
+        student_names = [enr.student.name for enr in cls.enrollments if enr.student] if hasattr(cls, 'enrollments') else []
+        print(student_names)
+        print(teacher_name)
+
         for sched in cls.schedules:
             title = cls.name
             description = f"{cls.name}<br>{cls.start_time} - {cls.end_time}"
@@ -222,6 +226,8 @@ def calendar():
                 'color': color,
                 'extendedProps': {
                     'description': description,
+                    'teacher_name': teacher.name if teacher_name else '',
+                    'student_names': student_names
                 }
             }
 

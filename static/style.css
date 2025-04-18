@@ -1,182 +1,182 @@
 :root {
-  --primary-color: #EC523E;
-  --primary-dark: #3a1d1a;
-  --secondary-color: #bfa8a3;
-  --success-color: #f17a5d;
-  --danger-color: #c43d33;
-  --warning-color: #f7b599;
-  --info-color: #e2c2bb;
-  --light-color: #fdf7f6;
-  --dark-color: #593e39;
+--primary-color: #EC523E;
+--primary-dark: #3a1d1a;
+--secondary-color: #bfa8a3;
+--success-color: #f17a5d;
+--danger-color: #c43d33;
+--warning-color: #f7b599;
+--info-color: #e2c2bb;
+--light-color: #fdf7f6;
+--dark-color: #593e39;
 
-  --font-color: #3b2c2a;
-  --bg-color: #fff8f6;
+--font-color: #3b2c2a;
+--bg-color: #fff8f6;
 }
 
 .btn {
-    margin-right:0.5rem;
+margin-right:0.5rem;
 }
 .btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+background-color: var(--primary-color);
+border-color: var(--primary-color);
 }
 
 /* Override .btn-primary hover to match --primary-color */
 .btn-primary:hover {
-  background-color: #c64534 !important;
-  border-color: #c64534 !important;
+background-color: #c64534 !important;
+border-color: #c64534 !important;
 }
 
 /* ปรับ pagination ปุ่มที่ active */
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-  background-color: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
-  color: white !important;
+background-color: var(--primary-color) !important;
+border-color: var(--primary-color) !important;
+color: white !important;
 }
 
 /* ป้องกันสีน้ำเงินบนปุ่ม pagination ตอน hover */
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-  background-color: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
-  color: white !important;
+background-color: var(--primary-color) !important;
+border-color: var(--primary-color) !important;
+color: white !important;
 }
 
 
 
 .bg-primary {
-  background-color: var(--primary-color) !important;
-  color: #fff;
+background-color: var(--primary-color) !important;
+color: #fff;
 }
 
 .text-primary {
-  color: var(--primary-color) !important;
+color: var(--primary-color) !important;
 }
 
 .table thead th {
-  background-color: var(--primary-color);
-  color: white;
+background-color: var(--primary-color);
+color: white;
 }
 
 
 body {
-  font-family: 'Noto Sans Thai', sans-serif;
-  font-size: 16px;
-  color: var(--font-color);
-  background-color: var(--light-color);
+font-family: 'Noto Sans Thai', sans-serif;
+font-size: 16px;
+color: var(--font-color);
+background-color: var(--light-color);
 }
 
 /* Sidebar custom color */
 .sidebar {
-  background-color: var(--primary-dark) !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+background-color: var(--primary-dark) !important;
+padding-left: 0 !important;
+padding-right: 0 !important;
 }
 
 .sidebar .nav-item .nav-link {
-  color: #f8f9fa;
-  font-size: 1.4rem;!important
+color: #f8f9fa;
+font-size: 1.4rem;!important
 }
 
 .sidebar .nav-item.active .nav-link {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+background-color: rgba(255, 255, 255, 0.1);
+color: #ffffff;
 }
 
 /* Ensure container-fluid stretches full width */
 .container-fluid {
-  max-width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
+max-width: 100%;
+padding-left: 1rem;
+padding-right: 1rem;
 }
 
 #content-wrapper {
-  margin-left: 0rem !important; /* หรือปรับตามต้องการ */
+margin-left: 0rem !important; /* หรือปรับตามต้องการ */
 }
 
 /* Fix sidebar spacing issues */
 #wrapper {
-  margin: 0;
-  padding: 0;
+margin: 0;
+padding: 0;
 }
 
 .custom-sidebar {
-  background-color: var(--primary-color) !important;
+background-color: var(--primary-color) !important;
 }
 
 .sidebar.bg-gradient-primary {
-  background-image: none !important;
-  background-color: var(--primary-dark) !important;
+background-image: none !important;
+background-color: var(--primary-dark) !important;
 }
 
 .color-option {
-  width: 30px;
-  height: 30px;
-  display: inline-block;
-  margin: 5px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  cursor: pointer;
-  position: relative;
+width: 30px;
+height: 30px;
+display: inline-block;
+margin: 5px;
+border-radius: 50%;
+border: 2px solid transparent;
+cursor: pointer;
+position: relative;
 }
 .color-option.selected {
-  /* border: 2px solid var(--primary-color); /* หรือเปลี่ยนสีตามต้องการ */
+/* border: 2px solid var(--primary-color); /* หรือเปลี่ยนสีตามต้องการ */
 }
 .color-option .check-icon {
-  position: absolute;
-  color: white;
-  font-weight: bold;
-  top: 4px;
-  left: 9px;
-  font-size: 14px;
-  display: none;
+position: absolute;
+color: white;
+font-weight: bold;
+top: 4px;
+left: 9px;
+font-size: 14px;
+display: none;
 }
 .color-option.selected .check-icon {
-  display: block;
+display: block;
 }
 
 .color-box {
-    display:inline-block;
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    border:2px solid #ccc;
+display:inline-block;
+width:30px;
+height:30px;
+border-radius:50%;
+border:2px solid #ccc;
 }
 
 .dropdown-menu .dropdown-item {
-  font-size: 1rem; /* หรือจะใช้ 1.1rem เพื่อให้ใหญ่ขึ้นอีกนิด */
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+font-size: 1rem; /* หรือจะใช้ 1.1rem เพื่อให้ใหญ่ขึ้นอีกนิด */
+padding-top: 0.5rem;
+padding-bottom: 0.5rem;
 }
 
 /* ปรับขนาด font ใน calendar */
 #calendar .fc-toolbar-title {
-  font-size: 1.25rem;
+font-size: 1.25rem;
 }
 
 #calendar .fc-button {
-  font-size: 0.875rem;
+font-size: 0.875rem;
 }
 
 #calendar .fc-col-header-cell-cushion,
 #calendar .fc-timegrid-slot-label {
-  font-size: 0.75rem;
+font-size: 0.75rem;
 }
 
 .fc-event {
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  white-space: normal;     /* อนุญาตให้ขึ้นบรรทัดใหม่ */
-  word-wrap: break-word;   /* ตัดคำเพื่อขึ้นบรรทัดใหม่ */
-  overflow-wrap: break-word;
+padding: 2px 4px;
+border-radius: 4px;
+font-size: 0.75rem;
+font-weight: 500;
+white-space: normal;     /* อนุญาตให้ขึ้นบรรทัดใหม่ */
+word-wrap: break-word;   /* ตัดคำเพื่อขึ้นบรรทัดใหม่ */
+overflow-wrap: break-word;
 }
 
 /* New rules appended */
 .fc-event {
-  color: white;
-  mix-blend-mode: difference;
-  transition: filter 0.2s ease-in-out;
+color: white;
+mix-blend-mode: difference;
+transition: filter 0.2s ease-in-out;
 }
 
 
@@ -184,122 +184,131 @@ body {
 .fc-event[style*="background-color: rgb(255"],
 .fc-event[style*="background-color: #fff"],
 .fc-event[style*="background-color: white"] {
-  color: black !important;
-  mix-blend-mode: normal;
+color: black !important;
+mix-blend-mode: normal;
 }
 
 .fc-event:hover {
-    filter: brightness(1.2);
-    color: white;
+filter: brightness(1.2);
+color: white;
 }
 
 /* ป้องกัน hover ใน list view เปลี่ยน bg เป็นดำ */
 .fc-list-event:hover td {
-  background-color: inherit !important;
-  color: inherit !important;
+background-color: inherit !important;
+color: inherit !important;
 }
 
 /* ถ้าอยากให้มีสีเวลา hover แบบ custom ก็เพิ่มได้ */
 .fc-list-event:hover td {
-  background-color: #f0f0f0 !important;  /* เปลี่ยนตามต้องการ */
-  color: var(--font-color) !important;
+background-color: #f0f0f0 !important;  /* เปลี่ยนตามต้องการ */
+color: var(--font-color) !important;
 }
 
 /* Tooltip เองก็สามารถแก้ให้แยกต่างหากได้ถ้าต้องการ */
 .tooltip-inner {
-  color: white;
-  background-color: black;
-  font-size: 0.875rem;
+color: white;
+background-color: black;
+font-size: 0.875rem;
 }
 
 /* ทำให้ container ไม่ overflow ตอน responsive */
 .fc {
-  max-width: 100%;
-  overflow-x: auto;
+max-width: 100%;
+overflow-x: auto;
 }
 
 /* ทำให้ปุ่มบาร์ของ FullCalendar ไม่ล้น */
 .fc-toolbar.fc-header-toolbar {
-  flex-wrap: wrap;
-  justify-content: space-between;
+flex-wrap: wrap;
+justify-content: space-between;
 }
 
 /* ปรับปุ่ม navigation และ dropdown ให้ไม่เบียดกัน */
 .fc-toolbar .fc-left,
 .fc-toolbar .fc-right {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+display: flex;
+flex-wrap: wrap;
+gap: 4px;
 
 }
 
 .fc-header-toolbar .fc-button {
-  margin-bottom: 10px; /* เพิ่มระยะห่างขวา */
+margin-bottom: 10px; /* เพิ่มระยะห่างขวา */
 }
 
 /* ปรับให้ปุ่ม today และ arrows อยู่ในแนวเดียวกันตอนหน้าจอแคบ */
 .fc-toolbar .fc-left > .fc-button-group {
-  display: flex;
-  flex-wrap: wrap;
+display: flex;
+flex-wrap: wrap;
 }
 
 /* ปรับความสูงของ calendar ตอนหน้าจอเล็ก */
 @media screen and (max-width: 768px) {
-  .fc {
-    font-size: 12px;
-  }
+.fc {
+font-size: 12px;
+}
 }
 
 @media (min-width: 768px) {
-    .sidebar .nav-item .nav-link span {
-        font-size: 0.9rem !important;
-        display: inline;
-    }
+.sidebar .nav-item .nav-link span {
+    font-size: 0.9rem !important;
+    display: inline;
+}
 }
 
 .sidebar .sidebar-heading {
-    padding: 0.1rem;
-    font-weight: 500;
-    font-size: .85rem;
-    color: #a9a9a9;
+padding: 0.1rem;
+font-weight: 500;
+font-size: .85rem;
+color: #a9a9a9;
 }
 
 html, body {
-  height: 100%;
-  overflow-y: auto;
+height: 100%;
+overflow-y: auto;
 }
 
 #content-wrapper {
-  min-height: 100vh;
+min-height: 100vh;
 }
 
 .full-height-center {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 .teacher-card {
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
 }
 .teacher-card:hover .teacher-option {
-    transform: scale(1.02);
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+transform: scale(1.02);
+box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 input[type="radio"]:checked + .teacher-option {
-    border: 2px solid #007bff;
-    background-color: #f0f8ff;
+border: 2px solid #007bff;
+background-color: #f0f8ff;
 }
 
 /* ปรับ layout */
 .teacher-option {
-    min-height: 100px;
+min-height: 100px;
 }
 .teacher-avatar {
-    flex-shrink: 0;
+flex-shrink: 0;
 }
 .teacher-info {
-    margin-left: 16px; /* เพิ่มระยะห่างระหว่างรูปกับข้อมูล */
+margin-left: 16px; /* เพิ่มระยะห่างระหว่างรูปกับข้อมูล */
 }
+
+
+#student-details * {
+  font-size: 16px;
+}
+#student-details strong {
+  font-weight: 600;
+}
+

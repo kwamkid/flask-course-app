@@ -129,8 +129,13 @@ def insert():
     create_class_schedule(class2)
 
     # วันหยุดตัวอย่าง
-    holiday = Holiday(date=datetime.today().strftime("%Y-%m-%d"), note="วันแรงงานแห่งชาติ")
-    db.session.add(holiday)
+    holiday_notes = ["วันแรงงาน", "วันเด็ก", "วันครู", "วันสงกรานต์", "วันปีใหม่"]
+    future_holidays = []
+    for _ in range(3):
+        future_date = (datetime.today() + timedelta(days=random.randint(5, 60))).strftime("%Y-%m-%d")
+        note = random.choice(holiday_notes)
+        future_holidays.append(Holiday(date=future_date, note=note))
+    db.session.add_all(future_holidays)
 
     # เพิ่มผู้ใช้ถ้ายังไม่มี
     if not User.query.filter_by(username="admin").first():
