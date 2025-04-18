@@ -93,7 +93,8 @@ with app.app_context():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    with db.session() as session:
+        return session.get(User, int(user_id))
 
 def get_weekday_index(day_name):
     days = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์']

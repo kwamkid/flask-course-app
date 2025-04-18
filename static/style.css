@@ -279,3 +279,27 @@ html, body {
   align-items: center;
   justify-content: center;
 }
+
+.teacher-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.teacher-card:hover .teacher-option {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+input[type="radio"]:checked + .teacher-option {
+    border: 2px solid #007bff;
+    background-color: #f0f8ff;
+}
+
+/* ปรับ layout */
+.teacher-option {
+    min-height: 100px;
+}
+.teacher-avatar {
+    flex-shrink: 0;
+}
+.teacher-info {
+    margin-left: 16px; /* เพิ่มระยะห่างระหว่างรูปกับข้อมูล */
+}

@@ -26,7 +26,7 @@ def create():
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
-        specialties = request.form['specialties']
+        specialties = ','.join(request.form.getlist('specialties'))
         max_hours = request.form['max_hours_per_week']
 
         teacher = Teacher(
@@ -68,7 +68,7 @@ def edit(id):
         teacher.name = request.form['name']
         teacher.email = request.form['email']
         teacher.phone = request.form['phone']
-        teacher.specialties = request.form['specialties']
+        teacher.specialties = ','.join(request.form.getlist('specialties'))
         teacher.max_hours_per_week = request.form['max_hours_per_week']
         print("โพสต์เข้ามาแล้ว")
 

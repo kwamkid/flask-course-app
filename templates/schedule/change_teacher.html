@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">เปลี่ยนครูผู้สอน</h1>
+    <h4 class="mb-4 text-primary">{{ class_obj.name }}</h4>
+
+    <form method="POST">
+        <div class="form-group">
+            <label>เลือกครูผู้สอนใหม่</label>
+            <div class="row">
+                {% for teacher in teachers %}
+                <div class="col-sm-6 col-md-6 col-lg-4 mb-4">
+                    <label for="teacher_{{ teacher.id }}" class="teacher-card w-100">
+                        <input type="radio" name="teacher_id" id="teacher_{{ teacher.id }}" value="{{ teacher.id }}"
+                               class="d-none"
+                               {% if teacher.id == assignment.teacher_id %}checked{% endif %} required>
+                        <div class="card shadow teacher-option p-3 d-flex flex-row align-items-center">
+                            <!-- รูปโปรไฟล์ -->
+                            <div class="teacher-avatar me-4">
+                                {% if teacher.image_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/' + teacher.image_filename) }}"
+                                         class="rounded-circle" style="width: 70px; height: 70px; object-fit: cover;">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='img/default_teacher.png') }}"
+                                         class="rounded-circle" style="width: 70px; height: 70px; object-fit: cover;">
+                                {% endif %}
+                            </div>
+
+                            <!-- ข้อมูลครู -->
+                            <div class="teacher-info">
+                                <div><strong>{{ teacher.name }}</strong></div>
+                                <div><small class="text-muted">ถนัด: {{ teacher.specialties or '-' }}</small></div>
+                                <div><small class="text-muted">โทร: {{ teacher.phone or '-' }}</small></div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mr-2">
+            <i class="fas fa-save mr-1"></i> บันทึกการเปลี่ยนครู
+        </button>
+        <a href="{{ url_for('schedule.view') }}" class="btn btn-secondary">
+            <i class="fas fa-times mr-1"></i> ยกเลิก
+        </a>
+    </form>
+</div>
+
+<!-- CSS แบบเดียวกับ manual_assign -->
+<style>
+    .teacher-card {
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .teacher-card:hover .teacher-option {
+        transform: scale(1.03);
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    input[type="radio"]:checked + .teacher-option {
+        border: 2px solid #007bff;
+        background-color: #e9f3ff;
+    }
+</style>
+{% endblock %}

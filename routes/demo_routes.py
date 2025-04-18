@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, url_for, flash
 from db import db
-from models import Student, Teacher, Course, Class, Holiday, User, Enrollment, ClassSchedule
+from models import Student, Teacher, Course, Class, Holiday, User, Enrollment, ClassSchedule, TeacherAssignment, \
+    TeacherUnavailableTime
 from datetime import datetime, timedelta
 import random
 import string
@@ -156,6 +157,8 @@ def clear():
     db.session.query(Course).delete()
     db.session.query(Student).delete()
     db.session.query(Teacher).delete()
+    db.session.query(TeacherAssignment).delete()
+    db.session.query(TeacherUnavailableTime).delete()
     db.session.query(Holiday).delete()
     db.session.commit()
     flash("ลบข้อมูลตัวอย่างเรียบร้อยแล้ว!", "success")

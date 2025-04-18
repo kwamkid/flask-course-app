@@ -14,10 +14,27 @@
 </div>
 
 <div class="form-group">
-    <label for="specialties">ความเชี่ยวชาญ (คั่นด้วยเครื่องหมาย ,)</label>
-    <input type="text" class="form-control" id="specialties" name="specialties"
-           value="{{ teacher.specialties if teacher else '' }}"
-           placeholder="เช่น Little Innovator, VEX GO, VEX IQ">
+    <label>ความถนัด (Specialties):</label>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="specialties" value="Python" id="specialty-python"
+               {% if teacher and 'Python' in (teacher.specialties or '') %}checked{% endif %}>
+        <label class="form-check-label" for="specialty-python">Python</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="specialties" value="Arduino" id="specialty-arduino"
+               {% if teacher and 'Arduino' in (teacher.specialties or '') %}checked{% endif %}>
+        <label class="form-check-label" for="specialty-arduino">Arduino</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="specialties" value="Robotics" id="specialty-robotics"
+               {% if teacher and 'Robotics' in (teacher.specialties or '') %}checked{% endif %}>
+        <label class="form-check-label" for="specialty-robotics">Robotics</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="specialties" value="Scratch" id="specialty-scratch"
+               {% if teacher and 'Scratch' in (teacher.specialties or '') %}checked{% endif %}>
+        <label class="form-check-label" for="specialty-scratch">Scratch</label>
+    </div>
 </div>
 
 <div class="form-group">

@@ -1,52 +1,55 @@
-<!-- templates/schedule/view.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>ตารางสอนครู</h1>
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">ตารางสอนครู</h1>
 
-    <div class="mb-3">
-        <a href="{{ url_for('schedule.auto_assign') }}" class="btn btn-primary">จัดตารางสอนอัตโนมัติ</a>
-        <a href="{{ url_for('schedule.manual_assign') }}" class="btn btn-success">จัดครูด้วยตัวเอง</a>
+    <div class="mb-3 text-right">
+        <a href="{{ url_for('schedule.auto_assign') }}" class="btn btn-danger">
+            <i class="fas fa-magic"></i> จัดตารางสอนอัตโนมัติ
+        </a>
+        <a href="{{ url_for('schedule.manual_assign') }}" class="btn btn-success">
+            <i class="fas fa-user-edit"></i> จัดครูด้วยตัวเอง
+        </a>
     </div>
 
     {% if assignments %}
     <div class="row">
         {% for assignment, teacher, class, course in assignments %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">{{ course.title }} - {{ class.name }}</h5>
-                </div>
-                <div class="card-body">
-                    <div class="media">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="text-center mb-3">
                         {% if teacher.image_filename %}
                             <img src="{{ url_for('static', filename='uploads/' + teacher.image_filename) }}"
-                                 class="mr-3 rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
+                                 class="rounded-circle shadow" style="width: 100px; height: 100px; object-fit: cover;">
                         {% else %}
                             <img src="{{ url_for('static', filename='img/default_teacher.png') }}"
-                                 class="mr-3 rounded-circle" style="width: 64px; height: 64px; object-fit: cover;">
+                                 class="rounded-circle shadow" style="width: 100px; height: 100px; object-fit: cover;">
                         {% endif %}
-                        <div class="media-body">
-                            <h5 class="mt-0">{{ teacher.name }}</h5>
-                            <p>{{ teacher.specialties }}</p>
-                        </div>
+                        <h5 class="text-primary mt-2 mb-1">{{ teacher.name }}</h5>
+                        <p class="mb-0 text-muted">{{ teacher.specialties or 'ไม่ระบุ' }}</p>
                     </div>
-                    <hr>
-                    <p class="card-text">
-                        <strong>วันเรียน:</strong> {{ class.days|join(', ') }}<br>
-                        <strong>เวลา:</strong> {{ class.start_time }} - {{ class.end_time }}
-                    </p>
+
+                    <div class="mb-3 text-center">
+                        <p class="mb-1"><strong>วิชา:</strong> {{ course.title }}</p>
+                        <p class="mb-1"><strong>คลาส:</strong> {{ class.name }}</p>
+                        <p class="mb-1"><strong>วันเรียน:</strong> {{ class.days | join(', ') }}</p>
+                        <p class="mb-0"><strong>เวลา:</strong> {{ class.start_time }} - {{ class.end_time }}</p>
+                    </div>
+
                     <a href="{{ url_for('schedule.change_teacher', assignment_id=assignment.id) }}"
-                       class="btn btn-sm btn-info">เปลี่ยนครู</a>
+                       class="btn btn-outline-primary btn-sm btn-block mt-auto">
+                        <i class="fas fa-exchange-alt"></i> เปลี่ยนครู
+                    </a>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <div class="alert alert-warning">
-        ยังไม่มีการจัดครูให้กับคลาสเรียน
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> ยังไม่มีการจัดครูให้กับคลาสเรียน
     </div>
     {% endif %}
 </div>

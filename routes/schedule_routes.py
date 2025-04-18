@@ -32,7 +32,7 @@ def is_teacher_available(teacher, class_obj, schedule_date):
         join(ClassSchedule, Class.id == ClassSchedule.class_id). \
         filter(
         TeacherAssignment.teacher_id == teacher.id,
-        ClassSchedule.date == schedule_date.date()
+        ClassSchedule.date == schedule_date
     ).all()
 
     for assignment, assigned_class, schedule in existing_assignments:
@@ -61,6 +61,7 @@ def auto_assign_teachers():
     ).filter(
         TeacherAssignment.id.is_(None)
     ).all()
+    print(len(unassigned_classes))
 
     all_teachers = Teacher.query.all()
 
@@ -73,15 +74,17 @@ def auto_assign_teachers():
         # หาครูที่เหมาะสมที่สุด
         best_teacher = None
         best_teacher_load = float('inf')  # เริ่มต้นด้วยค่าที่สูงมาก
-
+        print(len(all_teachers))
         for teacher in all_teachers:
             # ตรวจสอบคุณสมบัติก่อน
+            print(f"Checking teacher {teacher.name} with specialties {teacher.specialties} for class {class_obj.name} which requires {class_obj.required_specialty}")
             if not is_teacher_qualified(teacher, class_obj):
                 continue
 
             # ตรวจสอบว่าครูสามารถสอนได้ในทุกคาบหรือไม่
             can_teach_all = True
             for schedule in schedules:
+                print(f"[SKIP] ครู {teacher.name} ไม่ว่างหรือไม่ตรงคุณสมบัติ กับคลาส {class_obj.name}")
                 if not is_teacher_available(teacher, class_obj, schedule.date):
                     can_teach_all = False
                     break
@@ -101,6 +104,9 @@ def auto_assign_teachers():
             )
             db.session.add(assignment)
             assignments_made += 1
+        else:
+            flash(f'ไม่สามารถจัดครูให้คลาส "{class_obj.name}" ได้ เพราะไม่มีครูที่ว่างและตรงคุณสมบัติ', 'warning')
+            continue
 
     db.session.commit()
     return assignments_made
@@ -109,6 +115,7 @@ def auto_assign_teachers():
 @schedule_bp.route('/auto-assign', methods=['GET', 'POST'])
 def auto_assign():
     if request.method == 'POST':
+        print("Yess Man")
         assignments_made = auto_assign_teachers()
         flash(f'จัดตารางสอนอัตโนมัติเรียบร้อยแล้ว {assignments_made} คลาส', 'success')
         return redirect(url_for('schedule.view'))
@@ -153,12 +160,20 @@ def manual_assign():
         return redirect(url_for('schedule.view'))
 
     teachers = Teacher.query.all()
-    unassigned_classes = db.session.query(Class).outerjoin(
-        TeacherAssignment, Class.id == TeacherAssignment.class_id
-    ).filter(
-        TeacherAssignment.id.is_(None)
-    ).all()
 
+    # ตรวจสอบว่า class_id ที่ถูก assign ไปแล้วมีอะไรบ้าง
+    assigned_class_ids = db.session.query(TeacherAssignment.class_id).distinct().all()
+    print(f"assigned_class_ids (raw): {assigned_class_ids}")
+    assigned_class_ids = [cid for (cid,) in assigned_class_ids]
+    print(f"assigned_class_ids (flatten): {assigned_class_ids}")
+
+    # ตรวจสอบว่า unassigned_classes หาได้กี่คลาส
+    unassigned_classes = Class.query.filter(~Class.id.in_(assigned_class_ids)).all()
+    print(f"unassigned_classes count: {len(unassigned_classes)}")
+    for cls in unassigned_classes:
+        print(f"Unassigned Class: {cls.id} - {cls.name}")
+
+    print("Rendering manual_assign.html")
     return render_template(
         'schedule/manual_assign.html',
         teachers=teachers,
