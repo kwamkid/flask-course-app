@@ -312,3 +312,44 @@ margin-left: 16px; /* เพิ่มระยะห่างระหว่า�
   font-weight: 600;
 }
 
+/* Ensure container scales properly */
+.container, .container-fluid {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Make images responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive table overflow */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Make text not overflow */
+body {
+  word-wrap: break-word;
+}
+
+/* Example: force cards to stack */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 20px;
+  }
+
+  .d-flex {
+    flex-direction: column !important;
+  }
+
+  .form-row {
+    flex-direction: column !important;
+  }
+
+  .form-group {
+    width: 100% !important;
+  }
+}
