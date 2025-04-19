@@ -1,88 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion custom-sidebar" id="accordionSidebar">
+<!-- Sidebar - Brand -->
+<a class="sidebar-brand d-flex align-items-center justify-content-start px-3 py-3" href="/">
+  <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo" class="sidebar-logo">
+  <div class="sidebar-brand-text ms-2">CodeLab</div>
+</a>
 
-  <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center px-3 py-3" href="/">
-    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo" style="height: 28px; width: auto; margin-right: 10px;" class="img-fluid">
-    <div class="sidebar-brand-text text-white fw-bold">CODELAB</div>
-  </a>
+<!-- Divider -->
+<hr class="sidebar-divider my-0">
+
 <div class="sidebar-heading px-3 mt-3 mb-1 text-white-50">
   ระบบเรียนพิเศษ
 </div>
-  <li class="nav-item">
-    <a class="nav-link px-3 py-1" href="/calendar">
-      <i class="fas fa-calendar-alt fa-fw text-white"></i>
-      <span class="ps-2">ตารางเรียน</span>
-    </a>
-  </li>
 
-  <li class="nav-item">
-    <a class="nav-link collapsed px-3 py-1" href="#" data-toggle="collapse" data-target="#collapseEnroll" aria-expanded="true" aria-controls="collapseEnroll">
-      <i class="fas fa-clipboard-list fa-fw text-white"></i>
-      <span class="ps-2">ลงทะเบียนเรียน</span>
-    </a>
-    <div id="collapseEnroll" class="collapse" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="/enrollments">ข้อมูลลงทะเบียนเรียน</a>
-        <a class="collapse-item" href="/enroll">ลงทะเบียนนักเรียนใหม่</a>
-      </div>
+<li class="nav-item">
+  <a class="nav-link px-3 py-2" href="/calendar">
+    <i class="fas fa-calendar-alt fa-fw text-white"></i>
+    <span class="ps-2">ตารางเรียน</span>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed px-3 py-2" href="#" data-toggle="collapse" data-target="#collapseEnroll" aria-expanded="true" aria-controls="collapseEnroll">
+    <i class="fas fa-clipboard-list fa-fw text-white"></i>
+    <span class="ps-2">ลงทะเบียนเรียน</span>
+  </a>
+  <div id="collapseEnroll" class="collapse" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <a class="collapse-item" href="/enrollments">ข้อมูลลงทะเบียนเรียน</a>
+      <a class="collapse-item" href="/enroll">ลงทะเบียนนักเรียนใหม่</a>
     </div>
-  </li>
+  </div>
+</li>
 
-  <li class="nav-item">
-    <a class="nav-link collapsed px-3 py-1" href="#" data-toggle="collapse" data-target="#collapseStudent" aria-expanded="true" aria-controls="collapseStudent">
-      <i class="fas fa-user-graduate fa-fw text-white"></i>
-      <span class="ps-2">จัดการนักเรียน</span>
-    </a>
-    <div id="collapseStudent" class="collapse" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="/student">รายชื่อนักเรียน</a>
-      </div>
+<li class="nav-item">
+  <a class="nav-link collapsed px-3 py-2" href="#" data-toggle="collapse" data-target="#collapseStudent" aria-expanded="true" aria-controls="collapseStudent">
+    <i class="fas fa-user-graduate fa-fw text-white"></i>
+    <span class="ps-2">จัดการนักเรียน</span>
+  </a>
+  <div id="collapseStudent" class="collapse" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <a class="collapse-item" href="/student">รายชื่อนักเรียน</a>
     </div>
-  </li>
+  </div>
+</li>
 
-  <li class="nav-item">
-    <a class="nav-link collapsed px-3 py-1" href="#" data-toggle="collapse" data-target="#collapseAcademic" aria-expanded="true" aria-controls="collapseAcademic">
-      <i class="fas fa-book fa-fw text-white"></i>
-      <span class="ps-2">ข้อมูลการเรียน</span>
-    </a>
-    <div id="collapseAcademic" class="collapse" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="/course">คอร์สเรียน</a>
-        <a class="collapse-item" href="/class">คลาสเรียน</a>
-        <a class="collapse-item" href="/holiday">วันหยุด</a>
-      </div>
+<li class="nav-item">
+  <a class="nav-link collapsed px-3 py-2" href="#" data-toggle="collapse" data-target="#collapseAcademic" aria-expanded="true" aria-controls="collapseAcademic">
+    <i class="fas fa-book fa-fw text-white"></i>
+    <span class="ps-2">ข้อมูลการเรียน</span>
+  </a>
+  <div id="collapseAcademic" class="collapse" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <a class="collapse-item" href="/course">คอร์สเรียน</a>
+      <a class="collapse-item" href="/class">คลาสเรียน</a>
+      <a class="collapse-item" href="/holiday">วันหยุด</a>
     </div>
-  </li>
+  </div>
+</li>
 
-    <li class="nav-item">
-    <a class="nav-link px-3 py-1" href="{{ url_for('user.user_list') }}">
-      <i class="fas fa-calendar-alt fa-fw text-white"></i>
-      <span class="ps-2">จัดการผู้ใช้</span>
-    </a>
-  </li>
+<li class="nav-item">
+  <a class="nav-link px-3 py-2" href="{{ url_for('user.user_list') }}">
+    <i class="fas fa-users fa-fw text-white"></i>
+    <span class="ps-2">จัดการผู้ใช้</span>
+  </a>
+</li>
 
-  <hr class="sidebar-divider d-none d-md-block my-2">
-<!-- เพิ่มเมนูจัดการครู -->
+<hr class="sidebar-divider d-none d-md-block my-2">
+
 <div class="sidebar-heading px-3 mt-3 mb-1 text-white-50">
   การจัดการบุคลากร
 </div>
+
 <li class="nav-item">
-    <a class="nav-link px-3 py-1" href="{{ url_for('teacher.index') }}">
-      <i class="fas fa-chalkboard-teacher fa-fw text-white"></i>
-      <span class="ps-2">จัดการครู</span>
-    </a>
+  <a class="nav-link px-3 py-2" href="{{ url_for('teacher.index') }}">
+    <i class="fas fa-chalkboard-teacher fa-fw text-white"></i>
+    <span class="ps-2">จัดการครู</span>
+  </a>
 </li>
 
-<!-- เพิ่มเมนูจัดตารางสอน -->
 <li class="nav-item">
-  <a class="nav-link collapsed px-3 py-1" href="#" data-toggle="collapse" data-target="#collapseSchedule" aria-expanded="false" aria-controls="collapseSchedule">
+  <a class="nav-link collapsed px-3 py-2" href="#" data-toggle="collapse" data-target="#collapseSchedule" aria-expanded="false" aria-controls="collapseSchedule">
     <i class="fas fa-calendar-check fa-fw text-white"></i>
     <span class="ps-2">ตารางสอน</span>
   </a>
@@ -95,28 +91,26 @@
   </div>
 </li>
 
-    <!-- ปุ่มสำหรับใส่ข้อมูลตัวอย่าง -->
 <div class="sidebar-heading px-3 mt-3 mb-1 text-white-50">
   สำหรับผู้ดูแลระบบ
 </div>
-  <li class="nav-item">
-      <a class="nav-link px-3 py-1" href="{{ url_for('demo.insert') }}">
-          <i class="fas fa-database fa-fw text-white"></i>
-          <span class="ps-2">เพิ่มข้อมูลตัวอย่าง</span>
-      </a>
-  </li>
-  <li class="nav-item">
-  <a class="nav-link px-3 py-1 text-danger" href="{{ url_for('demo.clear') }}">
+
+<li class="nav-item">
+  <a class="nav-link px-3 py-2" href="{{ url_for('demo.insert') }}">
+    <i class="fas fa-database fa-fw text-white"></i>
+    <span class="ps-2">เพิ่มข้อมูลตัวอย่าง</span>
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link px-3 py-2 text-danger" href="{{ url_for('demo.clear') }}">
     <i class="fas fa-trash-alt fa-fw text-white"></i>
     <span class="ps-2">ลบข้อมูลทั้งหมด</span>
   </a>
 </li>
 
-  <!-- Sidebar Toggler -->
-  <div class="text-center d-none d-md-inline">
-    <button class="rounded-circle border-0" id="sidebarToggle"></button>
-  </div>
-
-</ul>
-</body>
-</html>
+<!-- Sidebar Toggler (Visible Only XL) -->
+<div class="text-center d-none d-xl-inline mt-3">
+  <button class="rounded-circle border-0" id="sidebarToggle">
+    <i class="fas fa-angle-left"></i>
+  </button>
+</div>
