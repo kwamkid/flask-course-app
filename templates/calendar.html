@@ -2,26 +2,29 @@
 {% block title %}ตารางเรียนแบบปฏิทิน{% endblock %}
 {% block content %}
 
-<div class="container-fluid mt-4" style="color: var(--font-color); padding: 20px;">
-  <div class="card shadow-sm">
-    <div class="card-header" style="background-color: var(--primary-color); color: white;">
-      <h5 class="mb-0">📅 ตารางเรียนแบบปฏิทิน</h5>
+<div class="calendar-container">
+  <div class="calendar-header">
+    <div class="calendar-title">
+      <i class="fas fa-calendar-alt mr-2"></i>
+      <h5 class="mb-0">ตารางเรียนแบบปฏิทิน</h5>
     </div>
-    <div class="card-body" style="background-color: var(--light-color);">
-      <div id="calendar"></div>
+    <div class="calendar-controls">
+      <button type="button" class="btn btn-sm btn-control" id="prev-btn">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button type="button" class="btn btn-sm btn-control" id="today-btn">วันนี้</button>
+      <button type="button" class="btn btn-sm btn-control" id="next-btn">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
+  </div>
+  <div class="calendar-body">
+    <div id="calendar"></div>
   </div>
 </div>
 
-<style>
-  #calendar {
-    max-width: 100%;
-    margin: 0 auto;
-  }
-</style>
-
 <!-- ถ้ายังไม่มี Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- ถ้ายังไม่มี dayjs (ช่วยให้จัดรูปเวลาได้แม่นกว่า) -->
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
@@ -38,8 +41,9 @@
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'th',
+        height: '100%',
         headerToolbar: {
-          left: 'prev,next today',
+          left: '',
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
         },
@@ -47,48 +51,52 @@
         displayEventTime: false,
         eventDisplay: 'block',
         eventDidMount: function(info) {
-  const event = info.event;
-  const props = event.extendedProps;
+          const event = info.event;
+          const props = event.extendedProps;
 
-  const className = `<div><strong>${event.title}</strong></div>`;
-  const dateTime = `<div>${dayjs(event.start).format('dddd D MMM YYYY เวลา HH:mm')}</div>`;
-  const teacher = `<div>ครู : ${props.teacher_name || '-'} ${props.teacher_phone || ''}</div>`;
+          const className = `<div><strong>${event.title}</strong></div>`;
+          const dateTime = `<div>${dayjs(event.start).format('dddd D MMM YYYY เวลา HH:mm')}</div>`;
+          const teacher = `<div>ครู : ${props.teacher_name || '-'} ${props.teacher_phone || ''}</div>`;
 
-  let studentsList = '<div>นักเรียน :</div>';
-  if (props.student_names && props.student_names.length > 0) {
-    studentsList += props.student_names.map((name, index) => `<div>${index + 1}. ${name}</div>`).join('');
-  } else {
-    studentsList += `<div>-</div>`;
-  }
+          let studentsList = '<div>นักเรียน :</div>';
+          if (props.student_names && props.student_names.length > 0) {
+            studentsList += props.student_names.map((name, index) => `<div>${index + 1}. ${name}</div>`).join('');
+          } else {
+            studentsList += `<div>-</div>`;
+          }
 
-  const tooltipContent = `${className}${dateTime}${teacher}${studentsList}`;
+          const tooltipContent = `${className}${dateTime}${teacher}${studentsList}`;
 
-  new bootstrap.Tooltip(info.el, {
-    title: tooltipContent,
-    placement: 'top',
-    trigger: 'hover',
-    container: 'body',
-    html: true,
-    customClass: 'fc-tooltip-custom'
-  });
-}
+          new bootstrap.Tooltip(info.el, {
+            title: tooltipContent,
+            placement: 'top',
+            trigger: 'hover',
+            container: 'body',
+            html: true,
+            customClass: 'fc-tooltip-custom'
+          });
+        }
       });
 
       calendar.render();
+
+      // Add custom navigation buttons functionality
+      document.getElementById('prev-btn').addEventListener('click', function() {
+        calendar.prev();
+      });
+
+      document.getElementById('next-btn').addEventListener('click', function() {
+        calendar.next();
+      });
+
+      document.getElementById('today-btn').addEventListener('click', function() {
+        calendar.today();
+      });
 
     } catch (e) {
       console.error("❌ FullCalendar Error:", e);
     }
   });
 </script>
-
-<style>
-  .fc-tooltip-custom .tooltip-inner {
-    max-width: 300px;
-    text-align: left;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-</style>
 
 {% endblock %}

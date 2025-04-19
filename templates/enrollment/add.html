@@ -2,133 +2,147 @@
 {% block title %}ลงทะเบียนนักเรียน{% endblock %}
 {% block content %}
 
-<style>
+<div class="enrollment-container">
+  <!-- Header section with title -->
+  <div class="enrollment-header">
+    <div class="header-title">
+      <i class="fas fa-user-plus mr-2"></i>
+      <h5 class="mb-0">ลงทะเบียนนักเรียนใหม่</h5>
+    </div>
+    <a href="{{ url_for('enroll.enrollment_list') }}" class="btn btn-add">
+      <i class="fas fa-arrow-left"></i> กลับไปหน้ารายการ
+    </a>
+  </div>
 
-</style>
-
-<form action="{{ url_for('enroll.enroll_form') }}" method="POST">
-    <div class="container-fluid">
-          <h1 class="h3 mb-4 text-primary">ลงทะเบียนนักเรียนใหม่</h1>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">[STEP 1] เลือกนักเรียน</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="student-search">ค้นหานักเรียน:</label>
-                            <input type="text" id="student-search" name="student_search" class="form-control mb-2" placeholder="ค้นหาชื่อนักเรียน..." required>
-                            <input type="hidden" name="student_id" id="student-id" required>
-                <div id="student-details" class="border p-2 bg-light position-relative" style="display: none;">
-                            <button type="button" class="close position-absolute" style="top: 5px; right: 10px;" aria-label="Close" onclick="clearStudentSelection()">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <strong>ข้อมูลนักเรียนที่เลือก:</strong>
-                            </div>
-                                <p id="student-name" class="mb-0"></p>
-                                <p id="student-email" class="mb-0 text-muted"></p>
-                                <div id="student-enrollments" class="mt-3" style="display: none;">
-                                    <strong>คลาสที่ลงทะเบียนแล้ว:</strong>
-                                    <ul id="enrolled-classes" class="mb-0 list-unstyled small text-muted"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <form action="{{ url_for('enroll.enroll_form') }}" method="POST" class="enrollment-form">
+    <div class="form-content">
+      <div class="row no-gutters">
+        <!-- Left Column - Student Selection -->
+        <div class="col-md-5 form-column">
+          <div class="form-section h-100">
+            <div class="section-header">
+              <div class="step-number">1</div>
+              <h6 class="mb-0">เลือกนักเรียน</h6>
             </div>
-            <div class="col-md-6">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">[STEP 2] เลือกคลาสเรียน</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="border rounded p-3">
-                            <div class="form-row mb-3 d-flex align-items-center">
-                              <div class="col-md-3">
-                                <label for="course-filter" class="mb-0 mr-2">คอร์ส:</label>
-                                {% set course_titles = [] %}
-                                <select id="course-filter" class="form-control">
-                                  <option value="">แสดงทั้งหมด</option>
-                                  {% for cls in all_classes %}
-                                  {% if cls.course['title'] not in course_titles %}
-                                  <option value="{{ cls.course['title'] }}">{{ cls.course['title'] }}</option>
-                                  {% set _ = course_titles.append(cls.course['title']) %}
-                                  {% endif %}
-                                  {% endfor %}
-                                </select>
-                              </div>
-                              <div class="col-md-9">
-                                <label for="class-search" class="mb-0 mr-2">ค้นหา:</label>
-                                <input type="text" id="class-search" class="form-control" placeholder="ค้นหาคลาส...">
-                              </div>
-                            </div>
+            <div class="section-body">
+              <div class="form-group">
+                <label for="student-search">ค้นหานักเรียน:</label>
+                <input type="text" id="student-search" name="student_search" class="form-control" placeholder="พิมพ์ชื่อนักเรียนที่ต้องการลงทะเบียน..." required>
+                <input type="hidden" name="student_id" id="student-id" required>
+              </div>
 
-                            <div class="form-row mb-4">
-                              <div class="col-md-12 d-flex align-items-center">
-                                <label class="mb-0 mr-2">วันเรียน:</label>
-                                <div id="day-filter" class="d-flex flex-wrap">
-                                  {% set weekdays = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'] %}
-                                  {% for day in weekdays %}
-                                  <div class="form-check form-check-inline mr-2">
-                                    <input class="form-check-input day-checkbox" type="checkbox" value="{{ day }}" id="day-{{ loop.index }}">
-                                    <label class="form-check-label" for="day-{{ loop.index }}">{{ day }}</label>
-                                  </div>
-                                  {% endfor %}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="table-responsive">
-                                    <table id="class-table" class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>ชื่อคอร์ส</th>
-                                            <th>ชื่อคลาส</th>
-                                            <th>วัน-เวลา</th>
-                                            <th>ช่วงวันที่</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for cls in all_classes %}
-                                        <tr>
-                                            <td>
-                                                <input type="radio" name="class_id" value="{{ cls.id }}" required>
-                                            </td>
-                                            <td>
-                                                <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background-color:{{ cls.course['color'] }};margin-right:6px;"></span>
-                                                {{ cls.course['title'] }}
-                                            </td>
-                                            <td><strong>{{ cls.name }}</strong></td>
-                                            <td>
-  {{ cls.day_display }}<br>
-  <small>{{ cls.start_time }} - {{ cls.end_time }}</small>
-</td>
-                                            <td>{{ cls.start_date }} - {{ cls.end_date }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+              <div id="student-details" class="selected-student" style="display: none;">
+                <div class="detail-header">
+                  <span>ข้อมูลนักเรียนที่เลือก</span>
+                  <button type="button" class="btn btn-sm btn-light" onclick="clearStudentSelection()">
+                    <i class="fas fa-times"></i>
+                  </button>
                 </div>
+                <div class="detail-body">
+                  <p id="student-name" class="mb-1"></p>
+                  <p id="student-email" class="mb-2 text-muted small"></p>
+
+                  <div id="student-enrollments" class="mt-3" style="display: none;">
+                    <div class="enrolled-header">
+                      <i class="fas fa-clipboard-list mr-2 text-primary"></i>
+                      <span>คลาสที่ลงทะเบียนแล้ว</span>
+                    </div>
+                    <ul id="enrolled-classes" class="enrolled-list"></ul>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
 
-        <button type="submit" class="btn btn-primary mb-3">
-            {{ BUTTON_LABELS.ok_btn }}
+        <!-- Right Column - Class Selection -->
+        <div class="col-md-7 form-column">
+          <div class="form-section h-100">
+            <div class="section-header">
+              <div class="step-number">2</div>
+              <h6 class="mb-0">เลือกคลาสเรียน</h6>
+            </div>
+            <div class="section-body pb-0">
+              <div class="filter-controls">
+                <div class="filter-row">
+                  <div class="filter-group">
+                    <label for="course-filter">คอร์ส:</label>
+                    <select id="course-filter" class="form-control form-control-sm">
+                      <option value="">แสดงทั้งหมด</option>
+                      {% for course in course_list %}
+                      <option value="{{ course.title }}">{{ course.title }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="filter-group">
+                    <label for="class-search">ค้นหา:</label>
+                    <input type="text" id="class-search" class="form-control form-control-sm" placeholder="ค้นหาคลาส...">
+                  </div>
+                </div>
+
+                <div class="filter-row mb-0">
+                  <div class="filter-group day-filter-group mb-0">
+                    <label>วันเรียน:</label>
+                    <div id="day-filter" class="day-filter">
+                      {% set weekdays = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'] %}
+                      {% for day in weekdays %}
+                      <div class="day-check">
+                        <input class="form-check-input day-checkbox" type="checkbox" value="{{ day }}" id="day-{{ loop.index }}">
+                        <label class="form-check-label" for="day-{{ loop.index }}">{{ day }}</label>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-responsive classes-table">
+                <table id="class-table" class="table table-sm class-selection-table">
+                  <thead>
+                    <tr>
+                      <th>คลาส</th>
+                      <th>คอร์ส</th>
+                      <th>ตารางเรียน</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for cls in all_classes %}
+                    <tr class="class-row" data-class-id="{{ cls.id }}">
+                      <td><strong>{{ cls.name }}</strong></td>
+                      <td>
+                        <div class="course-cell" style="background-color:{{ cls.course['color'] }};">
+                          {{ cls.course['title'] }}
+                        </div>
+                      </td>
+                      <td class="schedule-cell">
+                        <div>{{ cls.day_display }}</div>
+                        <div>{{ cls.start_time }} - {{ cls.end_time }}</div>
+                        <div class="date-range">เรียนวันที่ {{ cls.start_date }} - {{ cls.end_date }}</div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <input type="hidden" name="class_id" id="selected-class-id" required>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-check mr-1"></i> ลงทะเบียน
         </button>
-        <a href="{{ url_for('enroll.enrollment_list') }}" class="btn btn-secondary mb-3 ms-2">
-            {{ BUTTON_LABELS.cancel_btn }}
+        <a href="{{ url_for('enroll.enrollment_list') }}" class="btn btn-secondary ml-2">
+          <i class="fas fa-times mr-1"></i> ยกเลิก
         </a>
+      </div>
     </div>
-</form>
+  </form>
+</div>
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
@@ -184,6 +198,13 @@
                 $("#student-details").hide();
             }
         });
+
+        // ทำให้แถวตารางเป็นแบบคลิกเลือกได้
+        $(".class-row").click(function() {
+          $(".class-row").removeClass("selected");
+          $(this).addClass("selected");
+          $("#selected-class-id").val($(this).data("class-id"));
+        });
       } else {
         console.error("❌ jQuery not loaded before autocomplete init");
       }
@@ -209,7 +230,7 @@
         console.log("✅ Allowed class IDs:", allowedClassIds); // ✅ Debug line
         $("#class-table tbody tr").each(function () {
           const row = $(this);
-          const classId = parseInt(row.find('input[name="class_id"]').val());
+          const classId = parseInt(row.data("class-id"));
           console.log("🔍 Checking class row with ID:", classId); // ✅ Debug line
           if (allowedClassIds.includes(classId)) {
             row.show();
@@ -236,31 +257,20 @@
 </script>
 
 <script>
-    function initDataTableAndFilters() {
-      const table = $('#class-table').DataTable({
-          searching: false,
-          lengthChange: false,
-          language: {
-              zeroRecords: "ไม่พบข้อมูล",
-              info: "แสดง _START_ ถึง _END_ จาก _TOTAL_ รายการ",
-              infoEmpty: "ไม่มีข้อมูล",
-              infoFiltered: "(ค้นหาจากทั้งหมด _MAX_ รายการ)"
-          }
-      });
-
+    function initTableAndFilters() {
       $('#course-filter').on('change', function () {
           const val = $(this).val().toLowerCase();
-          table.rows().every(function () {
-              const courseCell = $(this.node()).find('td:eq(1)').text().toLowerCase();
-              $(this.node()).toggle(!val || courseCell.includes(val));
+          $("#class-table tbody tr").each(function() {
+            const courseCell = $(this).find("td:eq(1)").text().toLowerCase();
+            $(this).toggle(!val || courseCell.includes(val));
           });
       });
 
       $('#class-search').on('keyup', function () {
           const query = this.value.toLowerCase();
-          table.rows().every(function () {
-              const rowText = $(this.node()).text().toLowerCase();
-              $(this.node()).toggle(rowText.includes(query));
+          $("#class-table tbody tr").each(function() {
+            const rowText = $(this).text().toLowerCase();
+            $(this).toggle(rowText.includes(query));
           });
       });
 
@@ -268,26 +278,17 @@
           const selectedDays = $('#day-filter input[type="checkbox"]:checked')
               .map(function () { return $(this).val(); }).get();
 
-          table.rows().every(function () {
-              const dayCell = this.data()[4];
-              const match = selectedDays.every(day => dayCell.includes(day));
-              $(this.node()).toggle(match);
+          $("#class-table tbody tr").each(function() {
+            const dayCell = $(this).find("td:eq(2)").text();
+            const match = selectedDays.length === 0 || selectedDays.some(day => dayCell.includes(day));
+            $(this).toggle(match);
           });
       });
     }
 
-    function waitForjQueryThenInit() {
-      if (typeof $ !== 'undefined' && typeof $.fn !== 'undefined' && $.fn.DataTable) {
-        $(function () {
-          initDataTableAndFilters();
-        });
-      } else {
-        console.warn("⏳ Waiting for jQuery & DataTables to load...");
-        setTimeout(waitForjQueryThenInit, 100);
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', waitForjQueryThenInit);
+    window.addEventListener('DOMContentLoaded', function() {
+      initTableAndFilters();
+    });
 </script>
 
 {% endblock %}

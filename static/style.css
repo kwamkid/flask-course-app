@@ -607,3 +607,1124 @@ img {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-color);
 }
+
+/* ซ่อนข้อความ "CodeLab" แต่ยังคงแสดงโลโก้ */
+@media (max-width: 768px) {
+  /* จัดให้ navbar มีความสูงและกว้างที่เหมาะสม */
+  .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0;
+    position: relative;
+    height: 60px;
+  }
+
+  /* จัดตำแหน่ง logo ให้อยู่ตรงกลาง */
+  .navbar-brand, .navbar .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ซ่อนข้อความชื่อระบบ "CodeLab" ทุกรูปแบบ */
+  .navbar-brand span,
+  .navbar-brand h1,
+  .navbar-brand div:not(.logo),
+  .navbar-brand-text,
+  .navbar-brand:after,
+  .navbar-brand + span,
+  .navbar-brand ~ span,
+  .navbar-brand + div:not(.logo),
+  .logo + span,
+  .logo ~ span,
+  .logo ~ div:not(.logo) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    pointer-events: none !important;
+  }
+
+  /* ถ้าข้อความ CodeLab อยู่ใน pseudo element */
+  .navbar-brand:after,
+  .navbar-brand:before,
+  .logo:after,
+  .logo:before {
+    content: none !important;
+  }
+
+  /* ปรับขนาด logo ให้เหมาะสม */
+  .navbar .logo img,
+  .navbar-brand img,
+  img.logo {
+    height: 40px;
+    width: auto;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* ปรับตำแหน่งปุ่มเมนูให้อยู่ซ้ายสุด */
+  .navbar .menu-toggle,
+  .navbar .navbar-toggler {
+    position: absolute;
+    left: 1rem;
+  }
+
+  /* ปรับตำแหน่งรูปโปรไฟล์ให้อยู่ขวาสุด */
+  .navbar .profile-image,
+  .navbar .user-profile {
+    position: absolute;
+    right: 1rem;
+  }
+}
+
+/* กรณีที่ข้อความ CodeLab เป็นตัวหนังสือใน HTML โดยตรงและไม่มี class กำกับ */
+.navbar-brand:has(img) {
+  font-size: 0 !important;
+  color: transparent !important;
+  letter-spacing: 0 !important;
+}
+
+/* ถ้ามีการใช้ display: flex หรือ grid ใน .navbar-brand */
+.navbar-brand {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* สำหรับโครงสร้าง HTML ที่ข้อความ CodeLab ไม่ได้อยู่ใน span หรือ div */
+.navbar-brand {
+  max-width: 40px;
+  max-height: 40px;
+  overflow: hidden;
+}
+
+/* เฉพาะกรณีที่โลโก้และข้อความอยู่ใน element เดียวกัน */
+.navbar-brand, .navbar .logo {
+  font-size: 0;
+  line-height: 0;
+}
+
+/* เพิ่ม CSS นี้ลงในไฟล์ style.css */
+
+/* แก้ไขหน้า login และ register บนมือถือ */
+@media (max-width: 768px) {
+  /* ปรับขนาดการ์ด login/register ให้พอดีกับหน้าจอมือถือ */
+  .login-card,
+  .register-card,
+  .card.shadow.p-4 {
+    width: 90% !important;
+    min-width: unset !important;
+    max-width: 400px !important;
+    margin: 0 auto;
+    padding: 1.5rem !important;
+  }
+
+  /* ปรับขนาดฟอร์มให้พอดี */
+  .login-form,
+  .register-form,
+  .card form {
+    width: 100%;
+  }
+
+  /* ปรับขนาดปุ่มให้เหมาะสม */
+  .btn.w-100,
+  button[type="submit"] {
+    padding: 0.6rem;
+    font-size: 1rem;
+  }
+
+  /* ปรับข้อความให้อ่านง่าย */
+  .card .text-center {
+    font-size: 0.9rem;
+  }
+
+  /* ปรับ font-size ของหัวข้อให้เหมาะสม */
+  .card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* แก้ไขการจัดการพื้นที่ว่าง */
+  .vh-100 {
+    padding: 1rem 0;
+  }
+
+  /* ป้องกันการเลื่อนแนวนอน */
+  body, html {
+    overflow-x: hidden;
+  }
+
+  /* ปรับแต่ง input fields */
+  .form-control {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* ปรับระยะห่างระหว่าง fields */
+  .form-group, .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+
+  /* ปรับช่องว่างด้านล่างของป้าย label */
+  label.form-label {
+    margin-bottom: 0.3rem;
+  }
+}
+
+/* เพิ่มคลาสใหม่ที่จะใช้ในเทมเพลต */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.auth-card {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Calendar Flat Design Styles - Add to style.css */
+
+/* Main calendar container */
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 70px);
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Calendar header */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.calendar-title {
+  display: flex;
+  align-items: center;
+}
+
+.calendar-title i {
+  margin-right: 10px;
+}
+
+.calendar-title h5 {
+  margin: 0;
+  font-weight: 500;
+}
+
+.calendar-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.btn-control {
+  background-color: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.btn-control:hover {
+  background-color: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.5);
+  color: white;
+}
+
+/* Calendar body */
+.calendar-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* FullCalendar overrides for flat design */
+#calendar {
+  height: 100%;
+  font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Header toolbar */
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0.5rem;
+  padding: 1rem;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.2rem !important;
+  font-weight: 500;
+}
+
+/* Button styles */
+.fc .fc-button-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: none !important;
+  text-transform: none;
+  font-weight: normal;
+}
+
+.fc .fc-button-primary:not(:disabled):active,
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: #c64534 !important;
+  border-color: #c64534 !important;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #d04a39 !important;
+  border-color: #d04a39 !important;
+}
+
+/* Table styles */
+.fc .fc-scrollgrid {
+  border: none !important;
+}
+
+.fc .fc-scrollgrid-section > * {
+  border-color: #f1f1f1;
+}
+
+.fc th {
+  padding: 10px 0;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.fc td {
+  border-color: #f1f1f1;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: rgba(236, 82, 62, 0.1) !important;
+}
+
+/* Event styles */
+.fc-event {
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+  padding: 3px 5px;
+  margin: 1px 0;
+  font-size: 0.75rem;
+  font-weight: normal;
+}
+
+.fc-event:hover {
+  opacity: 0.9;
+}
+
+/* Tooltip styles */
+.fc-tooltip-custom .tooltip-inner {
+  max-width: 300px;
+  text-align: left;
+  font-size: 0.9rem;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .calendar-container {
+    height: calc(100vh - 60px);
+    border-radius: 0;
+  }
+
+  .calendar-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 1rem !important;
+  }
+
+  .fc .fc-toolbar.fc-header-toolbar {
+    padding: 0.75rem;
+  }
+
+  .fc th {
+    font-size: 0.8rem;
+  }
+
+  .fc-event {
+    font-size: 0.7rem;
+    padding: 2px 3px;
+  }
+}
+
+/* Make sure the calendar is visible and fills the space correctly */
+.calendar-body .fc-view {
+  background-color: #ffffff;
+}
+
+/* Fix for event text visibility */
+.fc-event-title, .fc-event-time {
+  padding: 0 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Better day cell height */
+.fc-daygrid-day-frame {
+  min-height: 100px;
+}
+
+/* Improved day number appearance */
+.fc-daygrid-day-number {
+  padding: 5px 8px !important;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Fix for events in week view */
+.fc-timegrid-event {
+  padding: 2px 4px;
+}
+
+/* Today highlight style */
+.fc-day-today .fc-daygrid-day-number {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 8px;
+}
+
+/* Enrollment List Page Styles - Add to style.css */
+
+/* Main container */
+.enrollment-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 70px);
+  background-color: #ffffff;
+  margin: 0;
+  overflow: auto;
+}
+
+/* Header with title and add button */
+.enrollment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+}
+
+.header-title i {
+  margin-right: 10px;
+}
+
+.header-title h5 {
+  margin: 0;
+  font-weight: 500;
+}
+
+.btn-add {
+  background-color: white;
+  color: var(--primary-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.btn-add:hover {
+  background-color: #f8f8f8;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: var(--primary-color);
+}
+
+/* Filter section */
+.filter-section {
+  background-color: #f8f8f8;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.filter-row:last-child {
+  margin-bottom: 0;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.day-filter-group {
+  flex: 100%;
+}
+
+.day-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.day-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 3px;
+  padding: 5px 10px 5px 5px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.day-check .form-check-input {
+  margin-top: 0;
+  margin-left: 0;
+  position: static;
+  margin-right: 10px;
+}
+
+.day-check .form-check-label {
+  margin-bottom: 0;
+  padding-left: 0;
+  font-weight: normal;
+  cursor: pointer;
+  position: static;
+}
+
+.day-check input {
+  margin: 0;
+}
+
+.day-check label {
+  margin: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+/* Class grid and cards */
+.class-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.class-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background-color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.class-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.class-card-header {
+  padding: 12px 15px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.class-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.student-count {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+}
+
+.class-card-body {
+  padding: 15px;
+  flex: 1;
+  overflow: auto;
+}
+
+/* Student list styling */
+.student-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.student-item {
+  display: flex;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.student-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.student-number {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-right: 10px;
+}
+
+.student-info {
+  flex: 1;
+}
+
+.student-name {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  margin-bottom: 3px;
+}
+
+.student-name:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.student-nickname {
+  font-weight: normal;
+  color: #666;
+}
+
+.student-school {
+  font-size: 0.85rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.student-school i {
+  margin-right: 8px;
+}
+
+/* Empty class styling */
+.empty-class {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 0;
+  color: #999;
+  text-align: center;
+}
+
+.empty-class i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.empty-class p {
+  margin: 0;
+}
+
+/* Form control overrides for this page */
+.enrollment-container .form-control {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+}
+
+.enrollment-container .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(236, 82, 62, 0.15);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .enrollment-container {
+    height: calc(100vh - 60px);
+  }
+
+  .enrollment-header {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .btn-add {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .filter-section {
+    padding: 0.75rem 1rem;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  .class-grid {
+    grid-template-columns: 1fr;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .day-filter {
+    flex-wrap: wrap;
+  }
+
+  .day-check {
+    flex-basis: calc(33.333% - 10px);
+    justify-content: center;
+  }
+}
+
+/* เพิ่ม CSS สำหรับแสดงข้อมูลเวลาและวันเรียน */
+.class-schedule {
+  font-size: 0.9rem;
+  color: #555;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.class-schedule i {
+  margin-right: 5px;
+  color: var(--primary-color);
+  opacity: 0.8;
+}
+
+.class-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+/* ปรับส่วนรูปแบบการแสดงผลชื่อคลาส */
+.class-card-header {
+  padding: 12px 15px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.student-count {
+  font-size: 0.85rem;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  opacity: 0.9;
+}
+
+.student-count i {
+  margin-right: 5px;
+}
+
+.class-card-body {
+  padding: 15px;
+}
+
+/* ปรับระยะห่างในส่วนของนักเรียน */
+.student-list {
+  margin-top: 5px;
+}
+
+/* CSS สำหรับหน้าฟอร์มลงทะเบียนแบบปรับปรุง - เพิ่มลงใน style.css */
+
+/* โครงสร้างหลักของฟอร์ม */
+.enrollment-form {
+  flex: 1;
+  overflow: auto;
+}
+
+.form-content {
+  padding: 15px;
+  height: auto !important;
+  min-height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+}
+
+.form-column {
+  padding: 0 7px;
+}
+
+.form-section {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  height: auto !important;
+}
+
+.section-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: 0.9rem;
+}
+
+.section-body {
+  padding: 15px;
+  overflow: visible !important;
+  flex: 1;
+}
+
+/* การ์ดแสดงข้อมูลนักเรียน */
+.selected-student {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.detail-body {
+  padding: 12px;
+  background-color: white;
+}
+
+.enrolled-header {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.enrolled-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.enrolled-list li {
+  padding: 8px 10px;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  border-left: 3px solid var(--primary-color);
+}
+
+/* ส่วนของตัวกรอง */
+.filter-controls {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.filter-row:last-child {
+  margin-bottom: 0;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.day-filter-group {
+  flex: 100%;
+}
+
+.day-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.day-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 3px;
+  padding: 3px 8px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.day-check .form-check-input {
+  margin: 0;
+  position: static;
+}
+
+.day-check .form-check-label {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  cursor: pointer;
+  position: static;
+  font-size: 0.85rem;
+}
+
+/* ตารางแสดงคลาสเรียน */
+.classes-table {
+  height: auto !important;
+  overflow: visible !important;
+  max-height: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 6px;
+}
+
+.class-selection-table {
+  background-color: white;
+  margin-bottom: 15px !important;
+}
+
+.class-selection-table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+  padding: 8px 10px;
+  font-weight: 600;
+  color: #495057;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.class-selection-table tbody td {
+  padding: 10px;
+  vertical-align: middle;
+  border-top: 1px solid #eee;
+}
+
+/* สไตล์สำหรับแถวที่คลิกเลือก */
+.class-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.class-row:hover {
+  background-color: rgba(108, 117, 125, 0.05);
+}
+
+.class-row.selected {
+  background-color: rgba(108, 117, 125, 0.1);
+  border-left: 3px solid #6c757d;
+}
+
+/* เพิ่มสไตล์เมื่อมีการคลิกเลือกแถว เพื่อให้ชัดเจนว่ามีการเลือกแล้ว */
+.class-row.selected td {
+  background-color: #f8f9fa;
+}
+
+/* สไตล์สำหรับเซลล์คอร์ส */
+.course-cell {
+  color: white;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-weight: 500;
+  text-align: center;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+/* สไตล์สำหรับเซลล์ตารางเรียน */
+.schedule-cell {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.schedule-cell .date-range {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 3px;
+}
+
+/* ปุ่มการทำงาน */
+.form-actions {
+  display: flex;
+  padding: 5px 7px;
+  margin-top: auto;
+}
+
+/* การปรับแต่งสำหรับโหมดมือถือ */
+@media (max-width: 768px) {
+  .form-content {
+    padding: 10px;
+    height: auto;
+  }
+
+  .form-column {
+    padding: 0 5px;
+    margin-bottom: 15px;
+  }
+
+  .section-header {
+    padding: 10px;
+  }
+
+  .section-body {
+    padding: 12px;
+  }
+
+  .classes-table {
+    height: auto !important;
+    overflow: visible !important;
+    max-height: none !important;
+    border: none !important;
+  }
+
+  .filter-row {
+    gap: 8px;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .form-actions .btn + .btn {
+    margin-left: 0 !important;
+    margin-top: 10px;
+  }
+
+  .course-cell {
+    font-size: 0.8rem;
+    padding: 4px 6px;
+  }
+
+  .schedule-cell {
+    font-size: 0.8rem;
+  }
+}
+
+/* ลบ scrollbar ทั้งหมดจากทุกส่วนในหน้า */
+.enrollment-container,
+.enrollment-form,
+.form-content,
+.form-section,
+.form-column,
+.section-body,
+.classes-table,
+.class-grid,
+.class-card-body,
+.detail-body,
+.student-details,
+.student-enrollments,
+.card,
+.card-body {
+  height: auto !important;
+  max-height: none !important;
+  min-height: auto !important;
+  overflow: visible !important;
+}

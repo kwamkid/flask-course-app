@@ -2,135 +2,177 @@
 {% block title %}รายชื่อนักเรียนตามคลาส{% endblock %}
 {% block content %}
 
-<div class="container-fluid mt-4">
+<div class="enrollment-container">
+  <!-- Header section with title and add button -->
+  <div class="enrollment-header">
+    <div class="header-title">
+      <i class="fas fa-users mr-2"></i>
+      <h5 class="mb-0">รายชื่อนักเรียนตามคลาสเรียน</h5>
+    </div>
+    <a href="{{ url_for('enroll.enroll_form') }}" class="btn btn-add">
+      <i class="fas fa-plus"></i> ลงทะเบียนเรียน
+    </a>
+  </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 text-primary">รายชื่อนักเรียนตามคลาสเรียน</h1>
-        <a href="{{ url_for('enroll.enroll_form') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> ลงทะเบียนเรียน
-        </a>
+  <!-- Filter section -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="class-search">ค้นหาคลาส:</label>
+        <input type="text" id="class-search" class="form-control" placeholder="ค้นหาชื่อคลาส...">
+      </div>
+
+      <div class="filter-group">
+        <label for="student-search">ชื่อนักเรียน:</label>
+        <input type="text" id="student-search" class="form-control" placeholder="ค้นหาชื่อนักเรียน...">
+      </div>
+
+      <div class="filter-group">
+        <label for="course-filter">คอร์สเรียน:</label>
+        <select id="course-filter" class="form-control">
+          <option value="">ทั้งหมด</option>
+          {% for course in course_list %}
+          <option value="{{ course.title }}">{{ course.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="status-filter">สถานะคอร์ส:</label>
+        <select id="status-filter" class="form-control">
+          <option value="">ทั้งหมด</option>
+          <option value="ongoing">คอร์สที่เปิดอยู่</option>
+          <option value="completed">คอร์สที่จบแล้ว</option>
+        </select>
+      </div>
     </div>
 
-    <div class="mb-4 d-flex flex-wrap align-items-end">
-        <div class="form-group mr-3">
-            <label for="class-search">ค้นหาคลาส:</label>
-            <input type="text" id="class-search" class="form-control" placeholder="ค้นหาชื่อคลาส...">
+    <div class="filter-row">
+      <div class="filter-group day-filter-group">
+        <label>วันเรียน:</label>
+        <div id="day-filter" class="day-filter">
+          {% set weekdays = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'] %}
+          {% for day in weekdays %}
+          <div class="day-check">
+            <input class="form-check-input day-checkbox" type="checkbox" value="{{ loop.index0 }}" id="day-{{ loop.index }}">
+            <label class="form-check-label" for="day-{{ loop.index }}">{{ day }}</label>
+          </div>
+          {% endfor %}
         </div>
-        <div class="form-group mr-3">
-            <label for="student-search">ชื่อนักเรียน:</label>
-            <input type="text" id="student-search" class="form-control" placeholder="ค้นหาชื่อนักเรียน...">
-        </div>
-        <div class="form-group mr-3">
-            <label for="course-filter">คอร์สเรียน:</label>
-            <select id="course-filter" class="form-control">
-                <option value="">ทั้งหมด</option>
-                {% for course in course_list %}
-                <option value="{{ course.title }}">{{ course.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group mr-3">
-            <label for="status-filter">สถานะคอร์ส:</label>
-            <select id="status-filter" class="form-control">
-                <option value="">ทั้งหมด</option>
-                <option value="ongoing">คอร์สที่เปิดอยู่</option>
-                <option value="completed">คอร์สที่จบแล้ว</option>
-            </select>
-        </div>
-        <div class="form-group mr-3">
-            <label>วันเรียน:</label>
-            <div id="day-filter" class="d-flex flex-wrap">
-                {% set weekdays = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'] %}
-                {% for day in weekdays %}
-                <div class="form-check form-check-inline mr-2">
-                    <input class="form-check-input day-checkbox" type="checkbox" value="{{ day }}" id="day-{{ loop.index }}">
-                    <label class="form-check-label" for="day-{{ loop.index }}">{{ day }}</label>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-
-    <!-- New card layout: flex-based responsive grid -->
-    <div id="class-container" class="row g-3 justify-content-start">
-        {% for cls in class_list %}
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="card shadow mb-4 class-card" data-name="{{ cls.name | lower }}" data-days="{% set ds = cls.days.split(',') %}{{ ds | join(' ') }}">
-                <div class="card-header text-white" style="background-color: {{ cls.course.color or '#dc3545' }};">
-                    <div><strong>{{ cls.name }}</strong></div>
-                    <div>🧑‍🎓 นักเรียน: {{ cls.enrollments|length }} คน</div>
-                </div>
-                <div class="card-body">
-                    {% if cls.enrollments %}
-                    <ul class="list-unstyled mb-0">
-                        {% for enroll in cls.enrollments %}
-                        <li class="mb-3">
-                            <strong>{{ loop.index }}.</strong>
-                            <a href="{{ url_for('student.student_view', student_id=enroll.student.id) }}" class="text-dark font-weight-bold">
-                                {{ enroll.student.name }} ({{ enroll.student.nickname or '-' }})
-                            </a><br>
-                            <span>โรงเรียน: {{ enroll.student.school_name or '-' }} - {{ enroll.student.school_level or '-' }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p class="text-muted">ยังไม่มีนักเรียนในคลาสนี้</p>
-                    {% endif %}
-                </div>
-            </div>
+  <!-- Class cards container -->
+  <div class="class-grid" id="class-container">
+    {% for cls in class_list %}
+    <div class="class-card-wrapper" data-name="{{ cls.name | lower }}" data-days="{{ cls.days }}">
+      <div class="class-card">
+        <div class="class-card-header" style="background-color: {{ cls.course.color or '#dc3545' }};">
+          <div class="class-name">{{ cls.name }}</div>
+          <div class="student-count">
+            <i class="fas fa-user-graduate"></i> {{ cls.enrollments|length }} คน
+          </div>
         </div>
-        {% endfor %}
+        <div class="class-card-body">
+          <!-- เพิ่มส่วนแสดงข้อมูลวันเรียนและเวลาเรียน -->
+          <div class="class-schedule">
+            {% set day_map = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'] %}
+            {% set days_list = [] %}
+            {% for day_idx in cls.days.split(',') %}
+              {% if day_idx|int >= 0 and day_idx|int < 7 %}
+                {% set _ = days_list.append(day_map[day_idx|int]) %}
+              {% endif %}
+            {% endfor %}
+            <i class="fas fa-calendar-day text-secondary mr-1"></i> {{ days_list|join(', ') }}
+            <i class="fas fa-clock text-secondary ml-2 mr-1"></i> {{ cls.start_time }} - {{ cls.end_time }}
+          </div>
+
+          {% if cls.enrollments %}
+          <ul class="student-list">
+            {% for enroll in cls.enrollments %}
+            <li class="student-item">
+              <div class="student-number">{{ loop.index }}.</div>
+              <div class="student-info">
+                <a href="{{ url_for('student.student_view', student_id=enroll.student.id) }}" class="student-name">
+                  {{ enroll.student.name }}
+                  <span class="student-nickname">({{ enroll.student.nickname or '-' }})</span>
+                </a>
+                <div class="student-school">
+                  <i class="fas fa-school text-muted"></i>
+                  {{ enroll.student.school_name or '-' }} - {{ enroll.student.school_level or '-' }}
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <div class="empty-class">
+            <i class="fas fa-user-slash text-muted"></i>
+            <p>ยังไม่มีนักเรียนในคลาสนี้</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
+    {% endfor %}
+  </div>
 </div>
 
 <script>
-    function applyClassFilters() {
-      const searchVal = document.getElementById('class-search').value.toLowerCase();
-      const studentVal = document.getElementById('student-search').value.toLowerCase();
-      const courseVal = document.getElementById('course-filter').value.toLowerCase();
-      const statusVal = document.getElementById('status-filter').value;
-      const checkedDays = Array.from(document.querySelectorAll('#day-filter input:checked')).map(cb => cb.value);
+  function applyClassFilters() {
+    const searchVal = document.getElementById('class-search').value.toLowerCase();
+    const studentVal = document.getElementById('student-search').value.toLowerCase();
+    const courseVal = document.getElementById('course-filter').value.toLowerCase();
+    const statusVal = document.getElementById('status-filter').value;
+    const checkedDays = Array.from(document.querySelectorAll('#day-filter input:checked')).map(cb => cb.value);
 
-    document.querySelectorAll('.class-card').forEach(card => {
-  const col = card.closest('.col-lg-4, .col-md-6, .col-sm-12');
+    document.querySelectorAll('.class-card-wrapper').forEach(card => {
+      const name = card.dataset.name;
+      const days = card.dataset.days || '';
+      const studentNames = Array.from(card.querySelectorAll('.student-item')).map(li => li.textContent.toLowerCase()).join(' ');
+      const courseTitle = card.querySelector('.class-name')?.textContent?.toLowerCase() || '';
+      const studentCount = parseInt(card.querySelector('.student-count')?.textContent?.match(/\d+/)?.[0]) || 0;
 
+      const matchSearch = !searchVal || name.includes(searchVal);
+      const matchStudent = !studentVal || studentNames.includes(studentVal);
+      const matchCourse = !courseVal || courseTitle.includes(courseVal);
 
-        const name = card.dataset.name;
-        const days = card.dataset.days;
-        const studentNames = Array.from(card.querySelectorAll('li')).map(li => li.textContent.toLowerCase()).join(' ');
-        const courseTitle = card.querySelector('.card-header div strong')?.textContent?.toLowerCase() || '';
-        const studentCount = parseInt(card.querySelector('.card-header div:nth-child(2)')?.textContent?.match(/\d+/)?.[0]) || 0;
+      // Fix for day filter - check if any of the checked days exist in the class days
+      let matchDays = true;
+      if (checkedDays.length > 0) {
+        matchDays = checkedDays.some(day => days.includes(day));
+      }
 
-        const matchSearch = !searchVal || name.includes(searchVal);
-        const matchStudent = !studentVal || studentNames.includes(studentVal);
-        const matchCourse = !courseVal || courseTitle.includes(courseVal);
-        const matchDays = checkedDays.every(day => days.includes(day));
+      let matchStatus = true;
+      if (statusVal === 'ongoing') {
+        matchStatus = studentCount > 0;
+      } else if (statusVal === 'completed') {
+        matchStatus = studentCount === 0;
+      }
 
-        let matchStatus = true;
-        if (statusVal === 'ongoing') {
-          matchStatus = studentCount > 0;
-        } else if (statusVal === 'completed') {
-          matchStatus = studentCount === 0;
-        }
-
-         if (matchSearch && matchStudent && matchCourse && matchDays && matchStatus) {
-    col.style.display = '';
-  } else {
-    col.style.display = 'none';
-  }
-});
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('class-search').addEventListener('input', applyClassFilters);
-      document.getElementById('student-search').addEventListener('input', applyClassFilters);
-      document.getElementById('course-filter').addEventListener('change', applyClassFilters);
-      document.getElementById('status-filter').addEventListener('change', applyClassFilters);
-      document.querySelectorAll('#day-filter input').forEach(cb => {
-        cb.addEventListener('change', applyClassFilters);
-      });
+      if (matchSearch && matchStudent && matchCourse && matchDays && matchStatus) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
     });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // แสดงข้อมูลทั้งหมดเมื่อโหลดหน้าครั้งแรก
+    document.querySelectorAll('.class-card-wrapper').forEach(card => {
+      card.style.display = '';
+    });
+
+    document.getElementById('class-search').addEventListener('input', applyClassFilters);
+    document.getElementById('student-search').addEventListener('input', applyClassFilters);
+    document.getElementById('course-filter').addEventListener('change', applyClassFilters);
+    document.getElementById('status-filter').addEventListener('change', applyClassFilters);
+    document.querySelectorAll('#day-filter input').forEach(cb => {
+      cb.addEventListener('change', applyClassFilters);
+    });
+  });
 </script>
 
 {% endblock %}
