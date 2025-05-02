@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}รายละเอียดการจองทดลองเรียน{% endblock %}
+{% block content %}
+
+<div class="container-fluid mt-4">
+  <h1 class="h3 mb-4 text-primary">รายละเอียดการจองทดลองเรียน</h1>
+
+  <div class="row">
+    <!-- ข้อมูลการจองหลัก -->
+    <div class="col-lg-8">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">ข้อมูลการจอง</h6>
+          <div>
+            {% if booking.status == 'confirmed' %}
+              <span class="badge badge-primary py-2 px-3">ยืนยันแล้ว</span>
+            {% elif booking.status == 'completed' %}
+              <span class="badge badge-success py-2 px-3">เรียนเรียบร้อยแล้ว</span>
+            {% elif booking.status == 'canceled' %}
+              <span class="badge badge-danger py-2 px-3">ยกเลิก</span>
+            {% elif booking.status == 'no_show' %}
+              <span class="badge badge-warning py-2 px-3">ไม่มาตามนัด</span>
+            {% else %}
+              <span class="badge badge-secondary py-2 px-3">{{ booking.status }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="mb-3">ข้อมูลคลาสเรียน</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 35%">คลาส:</th>
+                  <td>{{ booking.time_slot.trial_class.title }}</td>
+                </tr>
+                <tr>
+                  <th>วันที่:</th>
+                  <td>{{ booking.time_slot.date.strftime('%d/%m/%Y') }}</td>
+                </tr>
+                <tr>
+                  <th>เวลา:</th>
+                  <td>{{ booking.time_slot.start_time }} - {{ booking.time_slot.end_time }}</td>
+                </tr>
+                <tr>
+                  <th>ครูผู้สอน:</th>
+                  <td>{{ booking.teacher.name if booking.teacher else 'ยังไม่ระบุ' }}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="col-md-6">
+              <h5 class="mb-3">ข้อมูลนักเรียน</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 35%">ชื่อ-นามสกุล:</th>
+                  <td>{{ booking.student_name }}</td>
+                </tr>
+                <tr>
+                  <th>ชื่อเล่น:</th>
+                  <td>{{ booking.student_nickname or '-' }}</td>
+                </tr>
+                <tr>
+                  <th>อายุ:</th>
+                  <td>{{ booking.student_age if booking.student_age else '-' }} ปี</td>
+                </tr>
+                <tr>
+                  <th>โรงเรียน:</th>
+                  <td>{{ booking.student_school or '-' }}</td>
+                </tr>
+                <tr>
+                  <th>ระดับชั้น:</th>
+                  <td>{{ booking.student_grade or '-' }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <h5 class="mb-3">ข้อมูลผู้ปกครอง</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 35%">ชื่อผู้ปกครอง:</th>
+                  <td>{{ booking.parent_name }}</td>
+                </tr>
+                <tr>
+                  <th>เบอร์โทร:</th>
+                  <td>
+                    {{ booking.parent_phone }}
+                    <a href="tel:{{ booking.parent_phone }}" class="btn btn-sm btn-outline-success ml-2">
+                      <i class="fas fa-phone"></i> โทร
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <th>อีเมล:</th>
+                  <td>{{ booking.parent_email or '-' }}</td>
+                </tr>
+                <tr>
+                  <th>ไลน์ไอดี:</th>
+                  <td>{{ booking.parent_line_id or '-' }}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="col-md-6">
+              <h5 class="mb-3">ข้อมูลเพิ่มเติม</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 35%">คำขอพิเศษ:</th>
+                  <td>{{ booking.special_request or '-' }}</td>
+                </tr>
+                <tr>
+                  <th>แหล่งที่มา:</th>
+                  <td>{{ booking.source or '-' }}</td>
+                </tr>
+                <tr>
+                  <th>วันที่จอง:</th>
+                  <td>{{ booking.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                </tr>
+                <tr>
+                  <th>สมัครเรียน:</th>
+                  <td>
+                    {% if booking.converted %}
+                      <span class="text-success font-weight-bold">
+                        <i class="fas fa-check-circle"></i> สมัครแล้ว ({{ booking.converted_at.strftime('%d/%m/%Y %H:%M') }})
+                      </span>
+                    {% else %}
+                      <span class="text-secondary">ยังไม่สมัคร</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ฟอร์มแก้ไขข้อมูล -->
+    <div class="col-lg-4">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">จัดการการจอง</h6>
+        </div>
+        <div class="card-body">
+          <form action="{{ url_for('trial.update_booking', booking_id=booking.id) }}" method="POST">
+            <div class="form-group">
+              <label for="status">อัปเดตสถานะ:</label>
+              <select class="form-control" id="status" name="status">
+                <option value="confirmed" {% if booking.status == 'confirmed' %}selected{% endif %}>ยืนยันแล้ว</option>
+                <option value="completed" {% if booking.status == 'completed' %}selected{% endif %}>เรียนเรียบร้อยแล้ว</option>
+                <option value="canceled" {% if booking.status == 'canceled' %}selected{% endif %}>ยกเลิก</option>
+                <option value="no_show" {% if booking.status == 'no_show' %}selected{% endif %}>ไม่มาตามนัด</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="teacher_id">ครูผู้สอน:</label>
+              <select class="form-control" id="teacher_id" name="teacher_id">
+                <option value="none">-- ไม่ระบุ --</option>
+                {% for teacher in teachers %}
+                  <option value="{{ teacher.id }}" {% if booking.teacher and booking.teacher.id == teacher.id %}selected{% endif %}>
+                    {{ teacher.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-4">
+              <i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง
+            </button>
+          </form>
+
+          <hr>
+
+          {% if not booking.converted %}
+            <a href="{{ url_for('trial.convert_to_student', booking_id=booking.id) }}" class="btn btn-success btn-block">
+              <i class="fas fa-user-graduate"></i> แปลงเป็นนักเรียน
+            </a>
+          {% else %}
+            <button class="btn btn-success btn-block" disabled>
+              <i class="fas fa-check-circle"></i> แปลงเป็นนักเรียนแล้ว
+            </button>
+          {% endif %}
+
+          <a href="{{ url_for('trial.all_bookings') }}" class="btn btn-secondary btn-block mt-3">
+            <i class="fas fa-arrow-left"></i> กลับไปหน้ารายการจอง
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

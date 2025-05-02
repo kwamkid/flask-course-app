@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}แปลงเป็นนักเรียน{% endblock %}
+{% block content %}
+
+<div class="container-fluid mt-4">
+  <h1 class="h3 mb-4 text-primary">แปลงการจองเป็นนักเรียน</h1>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">ข้อมูลการจอง</h6>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>คลาส:</strong> {{ booking.time_slot.trial_class.title }}</p>
+          <p><strong>วันที่:</strong> {{ booking.time_slot.date.strftime('%d/%m/%Y') }}</p>
+          <p><strong>เวลา:</strong> {{ booking.time_slot.start_time }} - {{ booking.time_slot.end_time }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>ชื่อนักเรียน:</strong> {{ booking.student_name }}</p>
+          <p><strong>ชื่อเล่น:</strong> {{ booking.student_nickname or '-' }}</p>
+          <p><strong>ผู้ปกครอง:</strong> {{ booking.parent_name }}</p>
+          <p><strong>เบอร์โทร:</strong> {{ booking.parent_phone }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">สร้างข้อมูลนักเรียนใหม่</h6>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="name">ชื่อ-นามสกุล <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="name" name="name" value="{{ booking.student_name }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="nickname">ชื่อเล่น <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="nickname" name="nickname" value="{{ booking.student_nickname }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="student_age">อายุ</label>
+              <input type="number" class="form-control" id="student_age" name="student_age" value="{{ booking.student_age }}">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="school_name">โรงเรียน <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="school_name" name="school_name" value="{{ booking.student_school }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="school_level">ระดับชั้น <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="school_level" name="school_level" value="{{ booking.student_grade }}" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-3">
+          <p class="mb-0">
+            <i class="fas fa-info-circle"></i>
+            เมื่อทำการแปลงเป็นนักเรียนแล้ว ระบบจะสร้างข้อมูลนักเรียนใหม่และพาไปที่หน้าลงทะเบียนเรียนเพื่อกรอกข้อมูลเพิ่มเติมและเลือกคลาสเรียน
+          </p>
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-user-graduate"></i> แปลงเป็นนักเรียน
+          </button>
+          <a href="{{ url_for('trial.booking_detail', booking_id=booking.id) }}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> ยกเลิก
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

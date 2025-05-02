@@ -18,6 +18,22 @@
   </a>
 </li>
 
+<!-- เพิ่มเมนูระบบจองทดลองเรียน -->
+<li class="nav-item">
+  <a class="nav-link collapsed px-3 py-2" href="#" data-toggle="collapse" data-target="#collapseTrialClass" aria-expanded="true" aria-controls="collapseTrialClass">
+    <i class="fas fa-graduation-cap fa-fw text-white"></i>
+    <span class="ps-2">ทดลองเรียน</span>
+  </a>
+  <div id="collapseTrialClass" class="collapse" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <a class="collapse-item" href="{{ url_for('trial.index') }}">จัดการคลาสทดลองเรียน</a>
+      <a class="collapse-item" href="{{ url_for('trial.all_bookings') }}">รายการจองทั้งหมด</a>
+      <a class="collapse-item" href="{{ url_for('trial.bookings_calendar') }}">ปฏิทินการจอง</a>
+      <a class="collapse-item" href="{{ url_for('trial.public_classes') }}" target="_blank">หน้าจองสำหรับผู้ใช้</a>
+    </div>
+  </div>
+</li>
+
 <li class="nav-item">
   <a class="nav-link collapsed px-3 py-2" href="#" data-toggle="collapse" data-target="#collapseEnroll" aria-expanded="true" aria-controls="collapseEnroll">
     <i class="fas fa-clipboard-list fa-fw text-white"></i>

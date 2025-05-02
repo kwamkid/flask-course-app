@@ -86,6 +86,10 @@
             {% endfor %}
             <i class="fas fa-calendar-day text-secondary mr-1"></i> {{ days_list|join(', ') }}
             <i class="fas fa-clock text-secondary ml-2 mr-1"></i> {{ cls.start_time }} - {{ cls.end_time }}
+            <!-- เพิ่มการแสดงจำนวนครั้งที่เรียนไปแล้ว -->
+            <span class="class-progress ml-2">
+              <i class="fas fa-check-circle text-success"></i> เรียนไปแล้ว {{ cls.completed_sessions|default(0) }}/{{ cls.total_sessions }} ครั้ง
+            </span>
           </div>
 
           {% if cls.enrollments %}

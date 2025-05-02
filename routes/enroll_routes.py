@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
-from models import Student, Class, Enrollment , Course
+from models import Student, Class, Enrollment, Course, ClassSchedule
 from db import db
 from datetime import datetime, timedelta
 
@@ -7,10 +7,23 @@ from routes.course_routes import course_list
 
 enroll_bp = Blueprint('enroll', __name__)
 
+
 @enroll_bp.route('/enrollments')
 def enrollment_list():
+    # ดึงข้อมูลคลาสทั้งหมด
     class_list = Class.query.all()
     course_list = Course.query.all()
+
+    # เพิ่มข้อมูลจำนวนครั้งที่เรียนไปแล้ว
+    for cls in class_list:
+        # นับจำนวนครั้งที่เรียนไปแล้วจากตาราง ClassSchedule
+        completed_sessions = ClassSchedule.query.filter(
+            ClassSchedule.class_id == cls.id,
+            ClassSchedule.date <= datetime.now().date()  # เลือกเฉพาะวันที่ผ่านมาแล้ว
+        ).count()
+
+        # เพิ่มข้อมูลจำนวนครั้งที่เรียนไปแล้วในออบเจกต์คลาส
+        cls.completed_sessions = completed_sessions
 
     return render_template(
         'enrollment/list.html',
@@ -18,9 +31,9 @@ def enrollment_list():
         course_list=course_list,
     )
 
+
 @enroll_bp.route('/enroll', methods=['GET', 'POST'])
 def enroll_form():
-
     students = Student.query.with_entities(Student.id, Student.name).all()
     all_classes_raw = Class.query.all()
     today = datetime.now().date()
@@ -80,6 +93,7 @@ def enroll_form():
     enrollments = Enrollment.query.all()
     return render_template('enrollment/add.html', students=students, all_classes=all_classes)
 
+
 @enroll_bp.route('/get_available_classes/<int:student_id>')
 def get_available_classes(student_id):
     enrolled_class_ids = db.session.query(Enrollment.class_id).filter_by(student_id=student_id).all()
@@ -89,6 +103,7 @@ def get_available_classes(student_id):
     return jsonify([
         {'id': c.id, 'name': c.name} for c in available_classes
     ])
+
 
 @enroll_bp.route('/api/student_enrollments/<int:student_id>')
 def get_student_enrollments(student_id):
@@ -109,12 +124,20 @@ def get_student_enrollments(student_id):
         day_map = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์']
         day_names = [day_map[i] for i in day_indexes]
 
+        # นับจำนวนครั้งที่เรียนไปแล้ว
+        completed_sessions = ClassSchedule.query.filter(
+            ClassSchedule.class_id == cls.id,
+            ClassSchedule.date <= datetime.now().date()
+        ).count()
+
         result.append({
             'class_name': cls.name,
             'course_title': course.title,
             'days': day_names,
             'start_time': cls.start_time,
-            'end_time': cls.end_time
+            'end_time': cls.end_time,
+            'completed_sessions': completed_sessions,
+            'total_sessions': cls.total_sessions
         })
 
     return jsonify(result)

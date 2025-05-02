@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect , url_for
+from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, timedelta
 from db import db  # ✅ ใช้ db จากไฟล์ใหม่
 from models import Course, Class, ClassSchedule, Holiday, User, Teacher, TeacherAssignment
+from models.trial_models import TrialClass, TrialTimeSlot, TrialBooking  # นำเข้าโมเดลของระบบจองทดลองเรียน
 from flask import flash
 from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
@@ -15,12 +16,10 @@ from routes.user_routes import user_bp
 from routes.teacher_routes import teacher_bp
 from routes.schedule_routes import schedule_bp
 from routes.demo_routes import demo_bp
-
-
+from routes.trial_routes import trial_bp  # เพิ่ม Blueprint สำหรับระบบจองทดลองเรียน
 
 import os
 from werkzeug.utils import secure_filename
-
 
 # หลังจาก init_app แล้ว
 
@@ -52,15 +51,23 @@ app.register_blueprint(user_bp)
 app.register_blueprint(teacher_bp)
 app.register_blueprint(schedule_bp)
 app.register_blueprint(demo_bp)
+app.register_blueprint(trial_bp)  # เพิ่ม Blueprint สำหรับระบบจองทดลองเรียน
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'  # ชื่อ route login ของคุณ
 login_manager.login_message_category = 'info'
+
+
 @app.before_request
 def require_login():
     # ถ้า user ยังไม่ login และไม่ใช่ route ยกเว้น
-    if not current_user.is_authenticated and not request.endpoint in ['auth.login', 'auth.register', 'static']:
+    public_routes = ['auth.login', 'auth.register', 'static', 'trial.public_classes',
+                     'trial.public_book_class', 'trial.public_booking_confirmation',
+                     'trial.public_verify_booking', 'trial.api_get_classes',
+                     'trial.api_get_slots', 'trial.api_book_slot', 'trial.api_get_booking']
+
+    if not current_user.is_authenticated and request.endpoint not in public_routes:
         return redirect(url_for('auth.login'))
 
 
@@ -78,25 +85,29 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # จำกัดขนาดไฟล์ไม่เกิน 16 MB
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 
+
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # สร้างโฟลเดอร์สำหรับรูป default (ถ้าไม่มี)
 DEFAULT_IMAGES_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img')
 if not os.path.exists(DEFAULT_IMAGES_FOLDER):
     os.makedirs(DEFAULT_IMAGES_FOLDER)
 
-
 # สร้างตาราง (รันครั้งแรกเท่านั้น)
 with app.app_context():
     db.create_all()
+
+
 # (ตามด้วย model และ routes ต่าง ๆ)
 
 @login_manager.user_loader
 def load_user(user_id):
     with db.session() as session:
         return session.get(User, int(user_id))
+
 
 def get_weekday_index(day_name):
     days = ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์', 'อาทิตย์']
@@ -106,13 +117,16 @@ def get_weekday_index(day_name):
 def todatetime(value, format='%Y-%m-%d'):
     return datetime.strptime(value, format)
 
+
 def now():
     return datetime.utcnow()
+
 
 app.jinja_env.filters['todatetime'] = todatetime
 app.jinja_env.globals['now'] = now
 
 app.jinja_env.filters['todatetime'] = todatetime
+
 
 @app.template_filter('format_date')
 def format_date(value):
@@ -123,9 +137,11 @@ def format_date(value):
     except Exception:
         return value
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/holiday', methods=['GET', 'POST'])
 def holiday():
@@ -181,6 +197,7 @@ def add_holiday():
     holidays = Holiday.query.order_by(Holiday.date).all()
     return render_template('holiday.html', holidays=holidays)
 
+
 @app.route('/subject-class', methods=['GET'])
 def subject_class():
     courses = Course.query.all()
@@ -208,7 +225,8 @@ def calendar():
                 else:
                     teacher_image = url_for('static', filename='images/default_teacher.png')
 
-        student_names = [enr.student.name for enr in cls.enrollments if enr.student] if hasattr(cls, 'enrollments') else []
+        student_names = [enr.student.name for enr in cls.enrollments if enr.student] if hasattr(cls,
+                                                                                                'enrollments') else []
         print(student_names)
         print(teacher_name)
 
@@ -266,6 +284,7 @@ def regenerate_class_schedules():
     flash('อัพเดทตารางเรียนใหม่ทั้งหมด โดยอ้างอิงจากวันหยุดเรียบร้อยแล้ว', 'success')
     return redirect(url_for('holiday'))
 
+
 @app.route('/delete-holiday/<int:holiday_id>', methods=['POST'])
 def delete_holiday(holiday_id):
     holiday = Holiday.query.get_or_404(holiday_id)
@@ -273,6 +292,7 @@ def delete_holiday(holiday_id):
     db.session.commit()
     flash('ลบวันหยุดเรียบร้อยแล้ว', 'success')
     return redirect(url_for('holiday'))
+
 
 @app.context_processor
 def inject_labels():
@@ -287,6 +307,7 @@ def inject_labels():
             "cancel_btn": "ยกเลิก",
         }
     }
+
 
 if __name__ == '__main__':
     app.run(debug=True)

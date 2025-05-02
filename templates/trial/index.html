@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}จัดการคลาสทดลองเรียน{% endblock %}
+{% block content %}
+
+<div class="container-fluid mt-4">
+  <h1 class="h3 mb-4 text-primary">จัดการคลาสทดลองเรียน</h1>
+
+  <div class="mb-4">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <a href="{{ url_for('trial.add_trial_class') }}" class="btn btn-primary">
+          <i class="fas fa-plus"></i> เพิ่มคลาสทดลองเรียนใหม่
+        </a>
+      </div>
+      <div class="col-md-6 text-md-right">
+        <a href="{{ url_for('trial.all_bookings') }}" class="btn btn-info mr-2">
+          <i class="fas fa-list"></i> ดูการจองทั้งหมด
+        </a>
+        <a href="{{ url_for('trial.bookings_calendar') }}" class="btn btn-success">
+          <i class="fas fa-calendar-alt"></i> ดูปฏิทินการจอง
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% if trial_classes %}
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">คลาสทดลองเรียนทั้งหมด</h6>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="trialClassTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>ชื่อคลาส</th>
+                <th>คอร์สที่เกี่ยวข้อง</th>
+                <th>จำนวนที่รับ</th>
+                <th>จำนวนช่วงเวลา</th>
+                <th>การจองทั้งหมด</th>
+                <th>การจัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cls in trial_classes %}
+                <tr>
+                  <td>{{ cls.title }}</td>
+                  <td>{{ cls.course.title if cls.course else '-' }}</td>
+                  <td>{{ cls.max_students }} คน</td>
+                  <td>
+                    {% set active_slots = [slot for slot in cls.time_slots if slot.is_active] %}
+                    {{ active_slots|length }} / {{ cls.time_slots|length }}
+                    <a href="{{ url_for('trial.manage_time_slots', class_id=cls.id) }}" class="btn btn-sm btn-outline-primary ml-2">
+                      <i class="fas fa-clock"></i> จัดการช่วงเวลา
+                    </a>
+                  </td>
+                  <td>
+                    {% set total_bookings = 0 %}
+                    {% for slot in cls.time_slots %}
+                      {% set total_bookings = total_bookings + slot.bookings|length %}
+                    {% endfor %}
+                    {{ total_bookings }} รายการ
+                  </td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <a href="{{ url_for('trial.edit_trial_class', class_id=cls.id) }}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> แก้ไข
+                      </a>
+                      <button type="button" class="btn btn-sm btn-danger"
+                              onclick="confirmDelete('{{ cls.id }}', '{{ cls.title }}')">
+                        <i class="fas fa-trash"></i> ลบ
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      ยังไม่มีคลาสทดลองเรียน คลิกที่ปุ่ม "เพิ่มคลาสทดลองเรียนใหม่" เพื่อเริ่มต้น
+    </div>
+  {% endif %}
+</div>
+
+<!-- Modal ยืนยันการลบ -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ยืนยันการลบ</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        คุณต้องการลบคลาสทดลองเรียน "<span id="className"></span>" ใช่หรือไม่?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+        <form id="deleteForm" method="POST" action="">
+          <button type="submit" class="btn btn-danger">ลบข้อมูล</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmDelete(classId, className) {
+  document.getElementById('className').textContent = className;
+  document.getElementById('deleteForm').action = "{{ url_for('trial.delete_trial_class', class_id=0) }}".replace('0', classId);
+  $('#deleteModal').modal('show');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  $('#trialClassTable').DataTable();
+});
+</script>
+
+{% endblock %}
